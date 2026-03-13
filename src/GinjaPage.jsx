@@ -32,8 +32,8 @@ export default function GinjaPage() {
     <Layout>
       {/* ── Hero Section ─────────────────────────────── */}
       <section style={{ background: C.heroBg, width: "100%" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 48, padding: "48px 80px 72px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 24, flex: 1 }}>
+        <div className="mobile-stack" style={{ display: "flex", alignItems: "center", gap: 48, padding: "var(--section-padding)" }}>
+          <div className="mobile-center-text" style={{ display: "flex", flexDirection: "column", gap: 24, flex: 1 }}>
             <h1 style={{
               fontFamily: F.sora, fontSize: 48, fontWeight: 800,
               color: C.text, lineHeight: 1.2, letterSpacing: -0.5,
@@ -44,7 +44,7 @@ export default function GinjaPage() {
               Ginja conecta profissionais que desejam doar suas habilidades com
               organizações que geram impacto social.
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div className="mobile-center-items" style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <button
                 onClick={() => navigate("/voluntario")}
                 style={{
@@ -69,8 +69,8 @@ export default function GinjaPage() {
             </div>
           </div>
 
-          <div style={{
-            width: 520, height: 420, flexShrink: 0,
+          <div className="mobile-full-width" style={{
+            width: 520, height: "auto", aspectRatio: "520/420", flexShrink: 0,
             borderRadius: 20, overflow: "hidden",
             boxShadow: "0 8px 32px rgba(0,0,0,0.07)",
           }}>
@@ -86,22 +86,22 @@ export default function GinjaPage() {
       {/* ── Feedback Section ─────────────────────────── */}
       <section style={{
         background: C.white, display: "flex", flexDirection: "column",
-        alignItems: "center", gap: 32, padding: "80px 0 60px",
+        alignItems: "center", gap: 32, padding: "var(--section-padding)",
       }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: 680 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%", maxWidth: 680 }}>
           <h2 style={{ fontFamily: F.sora, fontSize: 36, fontWeight: 700, color: C.dark, textAlign: "center" }}>
             Ajude-nos a Construir o Ginja
           </h2>
-          <p style={{ fontFamily: F.inter, fontSize: 16, color: C.subtle, textAlign: "center", lineHeight: 1.6, width: 580 }}>
+          <p style={{ fontFamily: F.inter, fontSize: 16, color: C.subtle, textAlign: "center", lineHeight: 1.6, width: "100%", maxWidth: 580 }}>
             Estamos preparando o lançamento da nossa plataforma. Seu feedback
             nos ajudará a atender voluntários e organizações de forma eficaz.
           </p>
         </div>
 
         {/* Form Card */}
-        <div style={{
-          background: C.white, borderRadius: 16, padding: 40,
-          display: "flex", flexDirection: "column", gap: 28, width: 680,
+        <div className="mobile-full-width" style={{
+          background: C.white, borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
+          display: "flex", flexDirection: "column", gap: 28, width: "100%", maxWidth: 680,
           boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           border: `1px solid ${C.divider}`,
         }}>
@@ -133,11 +133,11 @@ export default function GinjaPage() {
           {/* Your Information */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Suas Informações</span>
-            <div style={{ display: "flex", gap: 16 }}>
+            <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
               <Field label="Nome Completo" placeholder="Seu nome completo" />
               <Field label="E-mail" placeholder="seu@email.com" type="email" />
             </div>
-            <div style={{ display: "flex", gap: 16 }}>
+            <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
               <Field label="Nome da Organização (opcional)" placeholder="Sua organização" />
               <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
                 <label style={labelStyle}>País</label>

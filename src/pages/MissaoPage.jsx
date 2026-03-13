@@ -32,8 +32,8 @@ export default function MissaoPage() {
   return (
     <Layout>
       {/* Hero */}
-      <section style={{ background: C.heroBg, padding: "72px 80px 64px", textAlign: "center" }}>
-        <h1 style={{ fontFamily: F.sora, fontSize: 44, fontWeight: 800, color: C.dark, marginBottom: 20 }}>
+      <section style={{ background: C.heroBg, padding: "var(--section-padding)", textAlign: "center" }}>
+        <h1 style={{ fontFamily: F.sora, fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 800, color: C.dark, marginBottom: 20 }}>
           Nossa Missão
         </h1>
         <p style={{ fontFamily: F.dm, fontSize: 19, color: C.muted, lineHeight: 1.7, maxWidth: 640, margin: "0 auto" }}>
@@ -43,8 +43,8 @@ export default function MissaoPage() {
       </section>
 
       {/* Stats */}
-      <section style={{ background: C.teal, padding: "56px 80px" }}>
-        <div style={{ display: "flex", justifyContent: "space-around", maxWidth: 1000, margin: "0 auto" }}>
+      <section style={{ background: C.teal, padding: "56px 20px" }}>
+        <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-around", maxWidth: 1000, margin: "0 auto", gap: 32 }}>
           {stats.map((s) => (
             <div key={s.label} style={{ textAlign: "center" }}>
               <p style={{ fontFamily: F.sora, fontSize: 40, fontWeight: 800, color: "#FFFFFF", marginBottom: 6 }}>{s.value}</p>
@@ -55,15 +55,15 @@ export default function MissaoPage() {
       </section>
 
       {/* Pillars */}
-      <section style={{ background: "#FFFFFF", padding: "72px 80px" }}>
+      <section style={{ background: "#FFFFFF", padding: "var(--section-padding)" }}>
         <h2 style={{ fontFamily: F.sora, fontSize: 30, fontWeight: 700, color: C.dark, marginBottom: 48, textAlign: "center" }}>
           Os Pilares do Ginja
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 800, margin: "0 auto" }}>
           {pillars.map((p) => (
-            <div key={p.number} style={{
+            <div key={p.number} className="mobile-stack" style={{
               display: "flex", gap: 28, alignItems: "flex-start",
-              background: "#FAF7F5", borderRadius: 16, padding: "32px 36px",
+              background: "#FAF7F5", borderRadius: 16, padding: "32px clamp(20px, 5vw, 36px)",
               border: `1px solid ${C.divider}`,
             }}>
               <span style={{ fontFamily: F.sora, fontSize: 36, fontWeight: 800, color: C.teal, opacity: 0.3, lineHeight: 1 }}>
@@ -79,7 +79,7 @@ export default function MissaoPage() {
       </section>
 
       {/* Vision */}
-      <section style={{ background: "#FAF7F5", padding: "72px 80px", textAlign: "center" }}>
+      <section style={{ background: "#FAF7F5", padding: "var(--section-padding)", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <h2 style={{ fontFamily: F.sora, fontSize: 30, fontWeight: 700, color: C.dark, marginBottom: 20 }}>
             Nossa Visão

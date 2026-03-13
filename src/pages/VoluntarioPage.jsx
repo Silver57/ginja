@@ -18,7 +18,7 @@ export default function VoluntarioPage() {
   return (
     <Layout>
       {/* Hero */}
-      <section style={{ background: C.heroBg, padding: "72px 80px 64px" }}>
+      <section style={{ background: C.heroBg, padding: "var(--section-padding)" }}>
         <div style={{ maxWidth: 620 }}>
           <span style={{
             fontFamily: F.inter, fontSize: 13, fontWeight: 600, color: C.teal,
@@ -27,7 +27,7 @@ export default function VoluntarioPage() {
           }}>
             Para voluntários
           </span>
-          <h1 style={{ fontFamily: F.sora, fontSize: 44, fontWeight: 800, color: C.dark, marginBottom: 20, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: F.sora, fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 800, color: C.dark, marginBottom: 20, lineHeight: 1.2 }}>
             Doe suas habilidades. Mude o mundo.
           </h1>
           <p style={{ fontFamily: F.dm, fontSize: 18, color: C.muted, lineHeight: 1.7, marginBottom: 36 }}>
@@ -45,11 +45,11 @@ export default function VoluntarioPage() {
       </section>
 
       {/* Form */}
-      <section style={{ background: "#FFFFFF", padding: "72px 80px", display: "flex", justifyContent: "center" }}>
+      <section style={{ background: "#FFFFFF", padding: "var(--section-padding)", display: "flex", justifyContent: "center" }}>
         {!submitted ? (
-          <div style={{
-            background: "#FFFFFF", borderRadius: 16, padding: 40,
-            display: "flex", flexDirection: "column", gap: 28, width: 680,
+          <div className="mobile-full-width" style={{
+            background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
+            display: "flex", flexDirection: "column", gap: 28, width: "100%", maxWidth: 680,
             boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
           }}>
             <h2 style={{ fontFamily: F.sora, fontSize: 24, fontWeight: 700, color: C.dark }}>
@@ -60,11 +60,11 @@ export default function VoluntarioPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Informações pessoais</span>
-              <div style={{ display: "flex", gap: 16 }}>
+              <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
                 <Field label="Nome Completo" placeholder="Seu nome completo" />
                 <Field label="E-mail" placeholder="seu@email.com" type="email" />
               </div>
-              <div style={{ display: "flex", gap: 16 }}>
+              <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
                 <Field label="LinkedIn (opcional)" placeholder="linkedin.com/in/seu-perfil" />
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
                   <label style={labelStyle}>País</label>

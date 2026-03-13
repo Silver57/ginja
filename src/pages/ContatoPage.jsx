@@ -17,8 +17,8 @@ export default function ContatoPage() {
   return (
     <Layout>
       {/* Hero */}
-      <section style={{ background: C.heroBg, padding: "72px 80px 64px", textAlign: "center" }}>
-        <h1 style={{ fontFamily: F.sora, fontSize: 44, fontWeight: 800, color: C.dark, marginBottom: 20 }}>
+      <section style={{ background: C.heroBg, padding: "var(--section-padding)", textAlign: "center" }}>
+        <h1 style={{ fontFamily: F.sora, fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 800, color: C.dark, marginBottom: 20 }}>
           Fale Conosco
         </h1>
         <p style={{ fontFamily: F.dm, fontSize: 19, color: "#5A5A5A", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
@@ -26,9 +26,9 @@ export default function ContatoPage() {
         </p>
       </section>
 
-      <section style={{ background: "#FFFFFF", padding: "72px 80px", display: "flex", gap: 64, alignItems: "flex-start", justifyContent: "center" }}>
+      <section className="mobile-stack" style={{ background: "#FFFFFF", padding: "var(--section-padding)", display: "flex", gap: 64, alignItems: "flex-start", justifyContent: "center" }}>
         {/* Contact channels */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 24, width: 260, flexShrink: 0 }}>
+        <div className="mobile-full-width" style={{ display: "flex", flexDirection: "column", gap: 24, width: 260, flexShrink: 0 }}>
           <h2 style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.dark }}>Canais diretos</h2>
           {channels.map((ch) => (
             <div key={ch.label} style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -43,12 +43,12 @@ export default function ContatoPage() {
 
         {/* Form */}
         {!submitted ? (
-          <div style={{
-            background: "#FFFFFF", borderRadius: 16, padding: 40,
-            display: "flex", flexDirection: "column", gap: 24, width: 560,
+          <div className="mobile-full-width" style={{
+            background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
+            display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 560,
             boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
           }}>
-            <div style={{ display: "flex", gap: 16 }}>
+            <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
               <Field label="Nome" placeholder="Seu nome" />
               <Field label="E-mail" placeholder="seu@email.com" type="email" />
             </div>
@@ -78,6 +78,7 @@ export default function ContatoPage() {
                   background: C.burgundy, color: "#FFFFFF",
                   fontFamily: F.inter, fontSize: 15, fontWeight: 600,
                   padding: "13px 40px", borderRadius: 999, border: "none", cursor: "pointer",
+                  width: "100%", maxWidth: "fit-content"
                 }}
               >
                 Enviar Mensagem
@@ -87,7 +88,7 @@ export default function ContatoPage() {
         ) : (
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            gap: 16, width: 560, padding: "64px 40px", textAlign: "center",
+            gap: 16, width: "100%", maxWidth: 560, padding: "64px 40px", textAlign: "center",
             background: "rgba(63,167,150,0.06)", borderRadius: 16, border: `1px solid rgba(63,167,150,0.2)`,
           }}>
             <div style={{ fontSize: 48 }}>✅</div>

@@ -23,6 +23,24 @@ export default function Layout({ children }) {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=DM+Sans:wght@400;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+          --nav-padding: 16px 80px;
+          --section-padding: 48px 80px;
+          --footer-padding: 48px 80px;
+        }
+        @media (max-width: 768px) {
+          :root {
+            --nav-padding: 16px 20px;
+            --section-padding: 40px 20px;
+            --footer-padding: 40px 20px;
+          }
+          .mobile-hide { display: none !important; }
+          .mobile-stack { flex-direction: column !important; gap: 32px !important; }
+          .mobile-full-width { width: 100% !important; max-width: 100% !important; }
+          .mobile-center-text { text-align: center !important; }
+          .mobile-center-items { align-items: center !important; }
+          .mobile-nav-menu { display: none !important; } /* Simplified: we could add a burger later */
+        }
         body { background: #FAF7F5; }
         input:focus, select:focus, textarea:focus { outline: 2px solid #3FA796; outline-offset: -1px; }
         input[type="radio"], input[type="checkbox"] { accent-color: #3FA796; }
@@ -35,7 +53,7 @@ export default function Layout({ children }) {
         {/* ── Nav ── */}
         <nav style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "16px 80px", width: "100%", background: "transparent",
+          padding: "var(--nav-padding)", width: "100%", background: "transparent",
           position: "sticky", top: 0, zIndex: 100,
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid rgba(0,0,0,0.04)",
@@ -48,7 +66,7 @@ export default function Layout({ children }) {
             </span>
           </Link>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+          <div className="mobile-hide" style={{ display: "flex", alignItems: "center", gap: 32 }}>
             {[
               { label: "Sobre", to: "/sobre" },
               { label: "Missão", to: "/missao" },
@@ -74,8 +92,8 @@ export default function Layout({ children }) {
         {children}
 
         {/* ── Footer ── */}
-        <footer style={{ background: C.footerBg, padding: "48px 80px", width: "100%" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginBottom: 32 }}>
+        <footer style={{ background: C.footerBg, padding: "var(--footer-padding)", width: "100%" }}>
+          <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-between", width: "100%", marginBottom: 32 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#F7D6CF" }} />
@@ -103,7 +121,7 @@ export default function Layout({ children }) {
 
           <hr style={{ border: "none", borderTop: `1px solid ${C.footerDivider}`, margin: 0 }} />
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32 }}>
+          <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32 }}>
             <span style={{ fontFamily: F.inter, fontSize: 12, color: "#666" }}>
               © 2026 Ginja. Todos os direitos reservados.
             </span>
