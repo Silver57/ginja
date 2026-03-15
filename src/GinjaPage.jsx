@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 
 // ── Design tokens ─────────────────────────────────────────
 const C = {
   teal: "#3FA796",
-  tealLight: "rgba(63,167,150,0.08)",
+  tealLight: "rgba(63,167,150,0.10)",
   burgundy: "#8B1E3F",
-  dark: "#1F1F1F",
+  dark: "#1A1A1A",
   text: "#2D2D2D",
-  muted: "#5A5A5A",
-  subtle: "#666666",
+  muted: "#555555",
+  subtle: "#6B6B6B",
   white: "#FFFFFF",
-  divider: "#EAEAEA",
-  heroBg: "linear-gradient(180deg, #FFF8E7 0%, #FFFDF5 45%, #F0F7E4 100%)",
+  divider: "#E8E8E8",
+  heroBg: "linear-gradient(150deg, #FFF9EB 0%, #FEF0F4 55%, #EAF6F3 100%)",
+  cardBg: "#FFFFFF",
 };
 
 const F = {
@@ -26,125 +26,185 @@ export default function GinjaPage() {
   const [role, setRole] = useState("volunteer");
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const navigate = useNavigate();
+
+  function scrollToForm(selectedRole) {
+    setRole(selectedRole);
+    document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
     <Layout>
       {/* ── Hero Section ─────────────────────────────── */}
       <section style={{ background: C.heroBg, width: "100%" }}>
-        <div className="mobile-stack" style={{ display: "flex", alignItems: "center", gap: 48, padding: "var(--section-padding)" }}>
-          <div className="mobile-center-text" style={{ display: "flex", flexDirection: "column", gap: 24, flex: 1 }}>
-            <h1 style={{
-              fontFamily: F.sora, fontSize: 48, fontWeight: 800,
-              color: C.text, lineHeight: 1.2, letterSpacing: -0.5,
-            }}>
-              Conectando Profissionais Com Propósito
-            </h1>
-            <p style={{ fontFamily: F.dm, fontSize: 18, color: C.muted, lineHeight: 1.65 }}>
-              Ginja conecta profissionais que desejam doar suas habilidades com
-              organizações que geram impacto social.
-            </p>
-            <div className="mobile-center-items" style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <button
-                onClick={() => navigate("/voluntario")}
-                style={{
-                  background: C.teal, color: C.white, fontFamily: F.dm,
-                  fontSize: 15, fontWeight: 700, padding: "14px 32px",
-                  borderRadius: 16, border: "none", cursor: "pointer",
-                  boxShadow: "0 4px 16px rgba(63,167,150,0.19)",
-                }}
-              >
-                Seja Voluntário
-              </button>
-              <button
-                onClick={() => navigate("/apoio")}
-                style={{
-                  background: C.white, color: C.teal, fontFamily: F.dm,
-                  fontSize: 15, fontWeight: 700, padding: "14px 32px",
-                  borderRadius: 16, border: `2px solid ${C.teal}`, cursor: "pointer",
-                }}
-              >
-                Solicitar Apoio
-              </button>
-            </div>
-          </div>
-
-          <div className="mobile-full-width" style={{
-            width: 520, height: "auto", aspectRatio: "520/420", flexShrink: 0,
-            borderRadius: 20, overflow: "hidden",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.07)",
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          gap: 28, padding: "var(--hero-padding)", textAlign: "center",
+        }}>
+          <h1 style={{
+            fontFamily: F.sora, fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800,
+            color: C.burgundy, lineHeight: 1.18, letterSpacing: -0.5,
+            whiteSpace: "pre-line",
           }}>
-            <img
-              src="/images/generated-1773335684949.png"
-              alt="Hero Visual"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+            {"Há quem saiba fazer.\nHá quem precise que aconteça.\nAinda não se encontraram."}
+          </h1>
+          <p style={{
+            fontFamily: F.sora, fontSize: "clamp(15px, 1.3vw, 18px)", fontWeight: 500,
+            color: C.teal, lineHeight: 1.5, maxWidth: 560,
+          }}>
+            Ligamos profissionais com capacidade a associações com missão
+          </p>
+          <p style={{
+            fontFamily: F.dm, fontSize: 14, color: "#888", lineHeight: 1.6, maxWidth: 480,
+          }}>
+            Nós tratamos das apresentações, sem complicações, sem taxas e com toda a vontade.
+          </p>
+          <div className="mobile-stack-buttons" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <button onClick={() => scrollToForm("volunteer")} style={{
+              background: C.teal, color: C.white, fontFamily: F.dm,
+              fontSize: 14, fontWeight: 700, padding: "12px 28px",
+              borderRadius: 12, border: "none", cursor: "pointer",
+              boxShadow: "0 4px 14px rgba(63,167,150,0.25)",
+            }}>Seja Voluntário</button>
+            <button onClick={() => scrollToForm("org")} style={{
+              background: "transparent", color: C.teal, fontFamily: F.dm,
+              fontSize: 14, fontWeight: 700, padding: "12px 28px",
+              borderRadius: 12, border: `1.5px solid ${C.teal}`, cursor: "pointer",
+            }}>Solicitar Apoio</button>
           </div>
         </div>
       </section>
 
-      {/* ── Feedback Section ─────────────────────────── */}
-      <section style={{
-        background: C.white, display: "flex", flexDirection: "column",
+      {/* ── How It Works ─────────────────────────────── */}
+      <section style={{ background: C.white, width: "100%", padding: "var(--section-padding)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexDirection: "column", gap: 36 }}>
+          <div style={{ textAlign: "center" }}>
+            <h2 style={{ fontFamily: F.sora, fontSize: "clamp(22px, 2.5vw, 32px)", fontWeight: 700, color: C.dark, marginBottom: 8 }}>
+              Como funciona
+            </h2>
+          </div>
+          <div className="mobile-stack" style={{ display: "flex", gap: 24, alignItems: "stretch" }}>
+            {[
+              {
+                n: "Fase 1", img: "/images/generated_image1.png",
+                title: "Querer ajudar e querer ser ajudado",
+                paras: [
+                  ["Há profissionais com muito para dar e associações com muito por fazer. O problema é que raramente se encontram. Nós tratamos disso. ", {h:"Encontramos a associação certa para o teu perfil e as tuas competências."}, ],
+                  ["Mas antes de avançares, é importante saberes: ", {h:"isto não é voluntariado ocasional."}, " Quando uma associação conta contigo, conta a sério. Pedimos-te ", {h:"compromisso com prazos, entregas e disponibilidade real."}, ],
+                ],
+              },
+              {
+                n: "Fase 2", img: "/images/generated_image2.png",
+                title: "Juntos, lado a lado",
+                paras: [
+                  ["Depois do match, começa o trabalho. Tu trazes o conhecimento técnico, a associação traz o contexto e a missão. ", {h:"Trabalham como parceiros"}, " — não és um empregado nem a associação é tua cliente."],
+                  [{h:"Nós acompanhamos o processo do início ao fim"}, ", garantindo que a comunicação flui e que ambos os lados têm o que precisam para avançar."],
+                ],
+              },
+              {
+                n: "Fase 3", img: "/images/generated_image3.png",
+                title: "O impacto que constróis",
+                paras: [
+                  ["Um site que finalmente funciona. Uma contabilidade organizada. Uma campanha que chegou a quem precisava. ", {h:"São estes os resultados quando alguém que sabe se junta a quem precisa."} ],
+                  [{h:"Tu ganhas propósito e experiência com significado."}, " A associação ganha capacidade que antes não tinha. E as comunidades que ela serve ganham um mundo um bocadinho melhor."],
+                ],
+                cta: "Junta-te a nós e coloca o que sabes ao serviço de quem precisa.",
+              },
+            ].map(({ n, img, title, paras, cta }) => (
+              <div key={n} style={{
+                flex: 1, background: C.white, borderRadius: 20, overflow: "hidden",
+                display: "flex", flexDirection: "column",
+                border: `1px solid ${C.divider}`,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
+              }}>
+                <img src={img} alt={title} style={{ width: "100%", height: 280, objectFit: "cover", display: "block" }} />
+                <div style={{ padding: "32px 32px 36px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
+                  <span style={{ fontFamily: F.sora, fontSize: 11, fontWeight: 700, color: C.teal, letterSpacing: 2.5, textTransform: "uppercase" }}>{n}</span>
+                  <h3 style={{ fontFamily: F.sora, fontSize: 21, fontWeight: 700, color: C.dark, lineHeight: 1.3 }}>{title}</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {paras.map((segments, i) => (
+                      <p key={i} style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.75, margin: 0 }}>
+                        {segments.map((s, j) =>
+                          typeof s === "string"
+                            ? s
+                            : <strong key={j} style={{ color: C.dark, fontWeight: 600 }}>{s.h}</strong>
+                        )}
+                      </p>
+                    ))}
+                  </div>
+                  {cta && (
+                    <p style={{ fontFamily: F.dm, fontSize: 15, fontWeight: 700, color: C.teal, marginTop: "auto", paddingTop: 8 }}>{cta}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Join Section ─────────────────────────────── */}
+      <section id="join" style={{
+        background: C.heroBg, display: "flex", flexDirection: "column",
         alignItems: "center", gap: 32, padding: "var(--section-padding)",
       }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%", maxWidth: 680 }}>
-          <h2 style={{ fontFamily: F.sora, fontSize: 36, fontWeight: 700, color: C.dark, textAlign: "center" }}>
-            Ajude-nos a Construir o Ginja
+        {/* Section intro */}
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 12, maxWidth: 520 }}>
+          <h2 style={{ fontFamily: F.sora, fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, color: C.burgundy, lineHeight: 1.2 }}>
+            Estamos ansiosos para começar.<br />Mas primeiro precisamos nós de ajuda.
           </h2>
-          <p style={{ fontFamily: F.inter, fontSize: 16, color: C.subtle, textAlign: "center", lineHeight: 1.6, width: "100%", maxWidth: 580 }}>
-            Estamos preparando o lançamento da nossa plataforma. Seu feedback
-            nos ajudará a atender voluntários e organizações de forma eficaz.
+          <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.65 }}>
+            O Ginja ainda está a ser construído — e quem o vai moldar és tu. Diz-nos quem és e o que precisas. A tua resposta faz a diferença.
           </p>
         </div>
 
+        {/* Role toggle */}
+        <div style={{ display: "flex", background: "rgba(255,255,255,0.7)", borderRadius: 999, padding: 4, gap: 4, border: `1px solid ${C.divider}` }}>
+          {[
+            { value: "volunteer", label: "Sou Voluntário" },
+            { value: "org",       label: "Sou uma Associação" },
+          ].map(({ value, label }) => (
+            <button key={value} onClick={() => setRole(value)} style={{
+              fontFamily: F.sora, fontSize: 14, fontWeight: 600,
+              padding: "10px 24px", borderRadius: 999, border: "none", cursor: "pointer",
+              background: role === value ? C.teal : "transparent",
+              color: role === value ? C.white : C.subtle,
+              transition: "all 0.15s",
+            }}>{label}</button>
+          ))}
+        </div>
+
+        {/* Dynamic subheading */}
+        <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.6, maxWidth: 460, textAlign: "center", marginTop: -16 }}>
+          {role === "volunteer"
+            ? "Diz-nos quem és e o que sabes fazer. Nós encontramos a associação certa para ti."
+            : "Conta-nos o que a tua associação precisa. Encontramos o profissional certo para ajudar."}
+        </p>
+
         {/* Form Card */}
         <div className="mobile-full-width" style={{
-          background: C.white, borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
-          display: "flex", flexDirection: "column", gap: 28, width: "100%", maxWidth: 680,
-          boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          background: C.white, borderRadius: 20, padding: "clamp(24px, 4vw, 40px)",
+          display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 680,
+          boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
           border: `1px solid ${C.divider}`,
         }}>
-          {/* Who are you */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Quem é você?</span>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                { value: "volunteer", label: "Profissional voluntário" },
-                { value: "org",       label: "Organização buscando ajuda" },
-                { value: "both",      label: "Ambos" },
-                { value: "other",     label: "Outro" },
-              ].map((opt) => (
-                <label key={opt.value} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
-                  <input
-                    type="radio" name="role" value={opt.value}
-                    checked={role === opt.value}
-                    onChange={() => setRole(opt.value)}
-                    style={{ width: 16, height: 16 }}
-                  />
-                  <span style={{ fontFamily: F.inter, fontSize: 14, color: C.dark }}>{opt.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <Divider />
-
-          {/* Your Information */}
+          {/* Contact info */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Suas Informações</span>
-            <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
-              <Field label="Nome Completo" placeholder="Seu nome completo" />
-              <Field label="E-mail" placeholder="seu@email.com" type="email" />
+            <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>
+              {role === "volunteer" ? "Os teus dados" : "Dados da associação"}
+            </span>
+            <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
+              <Field label="Nome completo" placeholder="O teu nome" />
+              <Field label="E-mail" placeholder="o.teu@email.com" type="email" />
             </div>
-            <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
-              <Field label="Nome da Organização (opcional)" placeholder="Sua organização" />
+            <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
+              {role === "org"
+                ? <Field label="Nome da associação" placeholder="Nome da vossa organização" />
+                : <Field label="Área profissional" placeholder="Ex: Design, Contabilidade, IT…" />}
               <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
                 <label style={labelStyle}>País</label>
                 <select style={inputStyle}>
-                  <option value="">Selecione seu país</option>
-                  <option>Brasil</option>
+                  <option value="">Seleciona o teu país</option>
                   <option>Portugal</option>
+                  <option>Brasil</option>
                   <option>Outro</option>
                 </select>
               </div>
@@ -153,62 +213,59 @@ export default function GinjaPage() {
 
           <Divider />
 
-          {/* Tell us more */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Conte-nos mais</span>
-            <Field
-              label="Como você gostaria de participar?"
-              placeholder="Habilidades que pode oferecer / Tipo de apoio necessário"
-            />
+          {/* Details */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>
+              {role === "volunteer" ? "O que podes oferecer" : "O que precisas"}
+            </span>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={labelStyle}>Comentários</label>
               <textarea
                 rows={4}
-                placeholder="Pensamentos ou feedback adicionais..."
-                style={{ ...inputStyle, resize: "none", fontFamily: F.inter }}
+                placeholder={role === "volunteer"
+                  ? "Descreve as tuas competências e em que tipo de projetos tens interesse…"
+                  : "Descreve o desafio ou projeto em que a tua associação precisa de ajuda…"}
+                style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }}
               />
             </div>
           </div>
 
           <Divider />
 
-          {/* Consent */}
-          <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
-            <input
-              type="checkbox" checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0 }}
-            />
-            <span style={{ fontFamily: F.inter, fontSize: 13, color: C.subtle, lineHeight: 1.5 }}>
-              Eu consinto em ser contatado sobre o acesso antecipado ao Ginja.
-            </span>
-          </label>
-
-          {/* Submit */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <button
-              onClick={() => setSubmitted(true)}
-              style={{
+          {/* Consent + submit */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+              <input
+                type="checkbox" checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                style={{ marginTop: 3, width: 15, height: 15, flexShrink: 0 }}
+              />
+              <span style={{ fontFamily: F.dm, fontSize: 13, color: C.subtle, lineHeight: 1.5 }}>
+                Aceito ser contactado pelo Ginja sobre o próximo passo.
+              </span>
+            </label>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => setSubmitted(true)} style={{
                 background: C.burgundy, color: C.white,
-                fontFamily: F.inter, fontSize: 16, fontWeight: 600,
-                padding: "16px 48px", borderRadius: 999,
+                fontFamily: F.sora, fontSize: 15, fontWeight: 700,
+                padding: "14px 48px", borderRadius: 999,
                 border: "none", cursor: "pointer",
-              }}
-            >
-              Enviar Feedback
-            </button>
+                boxShadow: "0 4px 16px rgba(139,30,63,0.2)",
+              }}>
+                {role === "volunteer" ? "Quero ser voluntário" : "Quero apoio para a minha associação"}
+              </button>
+            </div>
           </div>
         </div>
 
         {submitted && (
           <div style={{
-            display: "flex", alignItems: "center", gap: 8,
-            background: "rgba(63,167,150,0.08)", color: C.teal,
-            fontFamily: F.inter, fontSize: 14, fontWeight: 500,
-            padding: "12px 24px", borderRadius: 12,
+            display: "flex", alignItems: "center", gap: 10,
+            background: C.tealLight, color: C.teal,
+            fontFamily: F.dm, fontSize: 14, fontWeight: 600,
+            padding: "14px 28px", borderRadius: 12,
           }}>
             <CheckCircleIcon />
-            Obrigado por ajudar a moldar o Ginja.
+            Obrigado! Entraremos em contacto em breve.
           </div>
         )}
       </section>
@@ -219,7 +276,7 @@ export default function GinjaPage() {
 // ── Shared helpers ─────────────────────────────────────────
 
 export const labelStyle = {
-  fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500, color: "#1F1F1F",
+  fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#1A1A1A",
 };
 
 export const inputStyle = {

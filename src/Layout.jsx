@@ -24,22 +24,30 @@ export default function Layout({ children }) {
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=DM+Sans:wght@400;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-          --nav-padding: 16px 80px;
-          --section-padding: 48px 80px;
-          --footer-padding: 48px 80px;
+          --nav-padding: 14px 64px;
+          --section-padding: 56px 64px;
+          --footer-padding: 40px 64px;
+          --section-gap: 56px;
+          --hero-padding: 72px 64px 64px;
         }
         @media (max-width: 768px) {
           :root {
-            --nav-padding: 16px 20px;
+            --nav-padding: 12px 20px;
             --section-padding: 40px 20px;
-            --footer-padding: 40px 20px;
+            --footer-padding: 36px 20px;
+            --section-gap: 40px;
+            --hero-padding: 52px 20px 44px;
           }
           .mobile-hide { display: none !important; }
           .mobile-stack { flex-direction: column !important; gap: 32px !important; }
+          .mobile-stack-small { flex-direction: column !important; gap: 16px !important; }
+          .mobile-stack-buttons { flex-direction: column !important; width: 100% !important; max-width: 320px !important; }
+          .mobile-stack-buttons button { width: 100% !important; }
           .mobile-full-width { width: 100% !important; max-width: 100% !important; }
           .mobile-center-text { text-align: center !important; }
           .mobile-center-items { align-items: center !important; }
-          .mobile-nav-menu { display: none !important; } /* Simplified: we could add a burger later */
+          .mobile-center-content { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; }
+          .mobile-nav-menu { display: none !important; } 
         }
         body { background: #FAF7F5; }
         input:focus, select:focus, textarea:focus { outline: 2px solid #3FA796; outline-offset: -1px; }
@@ -66,21 +74,23 @@ export default function Layout({ children }) {
             </span>
           </Link>
 
-          <div className="mobile-hide" style={{ display: "flex", alignItems: "center", gap: 32 }}>
-            {[
-              { label: "Sobre", to: "/sobre" },
-              { label: "Missão", to: "/missao" },
-              { label: "Contato", to: "/contato" },
-            ].map(({ label, to }) => (
-              <Link key={to} to={to} style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 500, color: "#4A4A4A" }}>
-                {label}
-              </Link>
-            ))}
+          <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+            <div className="mobile-hide" style={{ display: "flex", alignItems: "center", gap: 32 }}>
+              {[
+                { label: "Sobre", to: "/sobre" },
+                { label: "Missão", to: "/missao" },
+                { label: "Contato", to: "/contato" },
+              ].map(({ label, to }) => (
+                <Link key={to} to={to} style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 500, color: "#4A4A4A" }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
             <button
               onClick={() => navigate("/participe")}
               style={{
                 background: C.teal, color: C.white, fontFamily: F.inter,
-                fontSize: 14, fontWeight: 600, padding: "10px 24px",
+                fontSize: 14, fontWeight: 600, padding: "10px 20px",
                 borderRadius: 999, border: "none", cursor: "pointer",
               }}
             >
