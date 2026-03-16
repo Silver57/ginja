@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Layout from "./Layout";
 
 // ── Design tokens ─────────────────────────────────────────
@@ -12,7 +13,7 @@ const C = {
   subtle: "#6B6B6B",
   white: "#FFFFFF",
   divider: "#E8E8E8",
-  heroBg: "linear-gradient(150deg, #FFF9EB 0%, #FEF0F4 55%, #EAF6F3 100%)",
+  heroBg: "linear-gradient(150deg, #FFF0CA 0%, #FFDFE8 50%, #D1F2EB 100%)",
   cardBg: "#FFFFFF",
 };
 
@@ -38,27 +39,27 @@ export default function GinjaPage() {
       <section style={{ background: C.heroBg, width: "100%" }}>
         <div style={{
           display: "flex", flexDirection: "column", alignItems: "center",
-          gap: 28, padding: "var(--hero-padding)", textAlign: "center",
+          gap: 32, padding: "var(--hero-padding)", textAlign: "center",
         }}>
-          <h1 style={{
-            fontFamily: F.sora, fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800,
-            color: C.burgundy, lineHeight: 1.18, letterSpacing: -0.5,
-            whiteSpace: "pre-line",
-          }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{
+              fontFamily: F.sora, fontSize: "clamp(36px, 6vw, 68px)", fontWeight: 800,
+              color: C.burgundy, lineHeight: 1.7, letterSpacing: "-0.01em",
+              whiteSpace: "pre-line",
+            }}
+          >
             {"Há quem saiba fazer.\nHá quem precise que aconteça.\nAinda não se encontraram."}
-          </h1>
-          <p style={{
-            fontFamily: F.sora, fontSize: "clamp(15px, 1.3vw, 18px)", fontWeight: 500,
-            color: C.teal, lineHeight: 1.5, maxWidth: 560,
-          }}>
-            Ligamos profissionais com capacidade a associações com missão
-          </p>
-          <p style={{
-            fontFamily: F.dm, fontSize: 14, color: "#888", lineHeight: 1.6, maxWidth: 480,
-          }}>
-            Nós tratamos das apresentações, sem complicações, sem taxas e com toda a vontade.
-          </p>
-          <div className="mobile-stack-buttons" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+          </motion.h1>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            className="mobile-stack-buttons"
+            style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}
+          >
             <button onClick={() => scrollToForm("volunteer")} style={{
               background: C.teal, color: C.white, fontFamily: F.dm,
               fontSize: 14, fontWeight: 700, padding: "12px 28px",
@@ -70,7 +71,7 @@ export default function GinjaPage() {
               fontSize: 14, fontWeight: 700, padding: "12px 28px",
               borderRadius: 12, border: `1.5px solid ${C.teal}`, cursor: "pointer",
             }}>Solicitar Apoio</button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -119,10 +120,10 @@ export default function GinjaPage() {
                 <img src={img} alt={title} style={{ width: "100%", height: 280, objectFit: "cover", display: "block" }} />
                 <div style={{ padding: "32px 32px 36px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
                   <span style={{ fontFamily: F.sora, fontSize: 11, fontWeight: 700, color: C.teal, letterSpacing: 2.5, textTransform: "uppercase" }}>{n}</span>
-                  <h3 style={{ fontFamily: F.sora, fontSize: 21, fontWeight: 700, color: C.dark, lineHeight: 1.3 }}>{title}</h3>
+                  <h3 style={{ fontFamily: F.sora, fontSize: 21, fontWeight: 700, color: C.dark, lineHeight: 1.4 }}>{title}</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {paras.map((segments, i) => (
-                      <p key={i} style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.75, margin: 0 }}>
+                      <p key={i} style={{ fontFamily: F.dm, fontSize: 16, color: C.subtle, lineHeight: 1.8, margin: 0 }}>
                         {segments.map((s, j) =>
                           typeof s === "string"
                             ? s
@@ -147,13 +148,10 @@ export default function GinjaPage() {
         alignItems: "center", gap: 32, padding: "var(--section-padding)",
       }}>
         {/* Section intro */}
-        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 12, maxWidth: 520 }}>
-          <h2 style={{ fontFamily: F.sora, fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, color: C.burgundy, lineHeight: 1.2 }}>
-            Estamos ansiosos para começar.<br />Mas primeiro precisamos nós de ajuda.
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 16, maxWidth: 520 }}>
+          <h2 style={{ fontFamily: F.sora, fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, color: C.burgundy, lineHeight: 1.6 }}>
+            Estamos ansiosos para começar.<br />Mas primeiro precisamos de te conhecer.
           </h2>
-          <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.65 }}>
-            O Ginja ainda está a ser construído — e quem o vai moldar és tu. Diz-nos quem és e o que precisas. A tua resposta faz a diferença.
-          </p>
         </div>
 
         {/* Role toggle */}
@@ -173,7 +171,7 @@ export default function GinjaPage() {
         </div>
 
         {/* Dynamic subheading */}
-        <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.6, maxWidth: 460, textAlign: "center", marginTop: -16 }}>
+        <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.7, maxWidth: 460, textAlign: "center", marginTop: -16 }}>
           {role === "volunteer"
             ? "Diz-nos quem és e o que sabes fazer. Nós encontramos a associação certa para ti."
             : "Conta-nos o que a tua associação precisa. Encontramos o profissional certo para ajudar."}
@@ -239,7 +237,7 @@ export default function GinjaPage() {
                 onChange={(e) => setConsent(e.target.checked)}
                 style={{ marginTop: 3, width: 15, height: 15, flexShrink: 0 }}
               />
-              <span style={{ fontFamily: F.dm, fontSize: 13, color: C.subtle, lineHeight: 1.5 }}>
+              <span style={{ fontFamily: F.dm, fontSize: 14, color: C.subtle, lineHeight: 1.6 }}>
                 Aceito ser contactado pelo Ginja sobre o próximo passo.
               </span>
             </label>
