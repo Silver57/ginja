@@ -71,9 +71,10 @@ export default function GinjasPage() {
               boxShadow: "0 4px 14px rgba(63,167,150,0.25)",
             }}>Sou Voluntário</button>
             <button onClick={() => scrollToForm("org")} style={{
-              background: "transparent", color: C.teal, fontFamily: F.dm,
+              background: C.burgundy, color: C.whiteColor, fontFamily: F.dm,
               fontSize: 14, fontWeight: 700, padding: "12px 28px",
-              borderRadius: 12, border: `1.5px solid ${C.teal}`, cursor: "pointer",
+              borderRadius: 12, border: "none", cursor: "pointer",
+              boxShadow: "0 4px 14px rgba(139,30,63,0.25)",
             }}>Sou uma Associação</button>
           </motion.div>
         </div>
