@@ -7,7 +7,7 @@ const C = {
   dark: "#1A1A1A",
   subtle: "#6B6B6B",
   divider: "#E8E8E8",
-  heroBg: "linear-gradient(150deg, #FFF9EB 0%, #FEF0F4 55%, #EAF6F3 100%)",
+  heroBg: "#F9F4E8",
 };
 const F = { sora: "'Sora', sans-serif", dm: "'DM Sans', sans-serif" };
 
@@ -38,7 +38,7 @@ export default function UnderConstruction({ title }) {
           fontFamily: F.dm, fontSize: 16, color: C.subtle,
           lineHeight: 1.7, maxWidth: 440,
         }}>
-          Esta página ainda não está pronta — mas o Ginja está a crescer. Em breve terás mais para ler aqui.
+          Esta página ainda não está pronta — mas o Ginjas está a crescer. Em breve terás mais para ler aqui.
         </p>
 
         <div style={{

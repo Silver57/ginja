@@ -49,7 +49,7 @@ export default function Layout({ children }) {
           .mobile-center-content { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; }
           .mobile-nav-menu { display: none !important; } 
         }
-        body { background: #FAF7F5; }
+        body { background: #F9F4E8; }
         input:focus, select:focus, textarea:focus { outline: 2px solid #3FA796; outline-offset: -1px; }
         input[type="radio"], input[type="checkbox"] { accent-color: #3FA796; }
         a { text-decoration: none; }
@@ -57,7 +57,7 @@ export default function Layout({ children }) {
         footer a:hover { color: #FFFFFF !important; }
       `}</style>
 
-      <div style={{ width: "100%", overflowX: "hidden", background: "#FAF7F5" }}>
+      <div style={{ width: "100%", overflowX: "hidden", background: "#F9F4E8" }}>
         {/* ── Nav ── */}
         <nav style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -65,12 +65,12 @@ export default function Layout({ children }) {
           position: "sticky", top: 0, zIndex: 100,
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid rgba(0,0,0,0.04)",
-          backgroundColor: "rgba(255,255,255,0.85)",
+          backgroundColor: "rgba(249, 244, 232, 0.85)",
         }}>
           <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 32, height: 32, borderRadius: "50%", background: C.orange }} />
             <span style={{ fontFamily: F.sora, fontSize: 24, fontWeight: 600, color: C.burgundy }}>
-              Ginja
+              Ginjas
             </span>
           </Link>
 
@@ -107,7 +107,7 @@ export default function Layout({ children }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#F7D6CF" }} />
-                <span style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.white }}>Ginja</span>
+                <span style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.white }}>Ginjas</span>
               </Link>
               <p style={{ fontFamily: F.inter, fontSize: 14, color: C.faint, lineHeight: 1.5, maxWidth: 280 }}>
                 Conectando Habilidades Com Impacto Social
@@ -133,7 +133,7 @@ export default function Layout({ children }) {
 
           <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32 }}>
             <span style={{ fontFamily: F.inter, fontSize: 12, color: "#666" }}>
-              © 2026 Ginja. Todos os direitos reservados.
+              © 2026 Ginjas. Todos os direitos reservados.
             </span>
             <span style={{ fontFamily: F.inter, fontSize: 12, color: "#666" }}>
               Feito com propósito.

@@ -11,10 +11,12 @@ const C = {
   text: "#2D2D2D",
   muted: "#555555",
   subtle: "#6B6B6B",
-  white: "#FFFFFF",
+  white: "#F9F4E8",
   divider: "#E8E8E8",
-  heroBg: "linear-gradient(150deg, #FFF0CA 0%, #FFDFE8 50%, #D1F2EB 100%)",
+  heroBg: "linear-gradient(rgba(249, 244, 232, 0.4), rgba(249, 244, 232, 0.4)), url('/images/hero_image_ginja.png') center/cover no-repeat",
   cardBg: "#FFFFFF",
+  whiteColor: "#FFFFFF",
+  heroSectionBg: "linear-gradient(rgba(249, 244, 232, 0.4), rgba(249, 244, 232, 0.4)), url('/images/hero_section_2.png') center/cover no-repeat",
 };
 
 const F = {
@@ -23,7 +25,7 @@ const F = {
   dm: "'DM Sans', sans-serif",
 };
 
-export default function GinjaPage() {
+export default function GinjasPage() {
   const [role, setRole] = useState("volunteer");
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -36,7 +38,7 @@ export default function GinjaPage() {
   return (
     <Layout>
       {/* ── Hero Section ─────────────────────────────── */}
-      <section style={{ background: C.heroBg, width: "100%" }}>
+      <section style={{ background: C.heroSectionBg, width: "100%" }}>
         <div style={{
           display: "flex", flexDirection: "column", alignItems: "center",
           gap: 32, padding: "var(--hero-padding)", textAlign: "center",
@@ -46,12 +48,14 @@ export default function GinjaPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             style={{
-              fontFamily: F.sora, fontSize: "clamp(36px, 6vw, 68px)", fontWeight: 800,
-              color: C.burgundy, lineHeight: 1.7, letterSpacing: "-0.01em",
-              whiteSpace: "pre-line",
+              fontFamily: F.sora, fontWeight: 800,
+              color: C.burgundy, lineHeight: 1.2, letterSpacing: "-0.01em",
+              display: "flex", flexDirection: "column", gap: "8px"
             }}
           >
-            {"Há quem saiba fazer.\nHá quem precise que aconteça.\nAinda não se encontraram."}
+            <span style={{ fontSize: "clamp(44px, 8vw, 78px)" }}>Há quem saiba fazer.</span>
+            <span style={{ fontSize: "clamp(36px, 6vw, 64px)" }}>Há quem precise que aconteça.</span>
+            <span style={{ fontSize: "clamp(28px, 4vw, 50px)" }}>Ainda não se encontraram.</span>
           </motion.h1>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -61,16 +65,16 @@ export default function GinjaPage() {
             style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}
           >
             <button onClick={() => scrollToForm("volunteer")} style={{
-              background: C.teal, color: C.white, fontFamily: F.dm,
+              background: C.teal, color: C.whiteColor, fontFamily: F.dm,
               fontSize: 14, fontWeight: 700, padding: "12px 28px",
               borderRadius: 12, border: "none", cursor: "pointer",
               boxShadow: "0 4px 14px rgba(63,167,150,0.25)",
-            }}>Seja Voluntário</button>
+            }}>Sou Voluntário</button>
             <button onClick={() => scrollToForm("org")} style={{
               background: "transparent", color: C.teal, fontFamily: F.dm,
               fontSize: 14, fontWeight: 700, padding: "12px 28px",
               borderRadius: 12, border: `1.5px solid ${C.teal}`, cursor: "pointer",
-            }}>Solicitar Apoio</button>
+            }}>Sou uma Associação</button>
           </motion.div>
         </div>
       </section>
@@ -112,7 +116,7 @@ export default function GinjaPage() {
               },
             ].map(({ n, img, title, paras, cta }) => (
               <div key={n} style={{
-                flex: 1, background: C.white, borderRadius: 20, overflow: "hidden",
+                flex: 1, background: C.whiteColor, borderRadius: 20, overflow: "hidden",
                 display: "flex", flexDirection: "column",
                 border: `1px solid ${C.divider}`,
                 boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
@@ -144,7 +148,7 @@ export default function GinjaPage() {
 
       {/* ── Join Section ─────────────────────────────── */}
       <section id="join" style={{
-        background: C.heroBg, display: "flex", flexDirection: "column",
+        background: C.white, display: "flex", flexDirection: "column",
         alignItems: "center", gap: 32, padding: "var(--section-padding)",
       }}>
         {/* Section intro */}
@@ -155,7 +159,7 @@ export default function GinjaPage() {
         </div>
 
         {/* Role toggle */}
-        <div style={{ display: "flex", background: "rgba(255,255,255,0.7)", borderRadius: 999, padding: 4, gap: 4, border: `1px solid ${C.divider}` }}>
+        <div style={{ display: "flex", background: "rgba(249, 244, 232, 0.7)", borderRadius: 999, padding: 4, gap: 4, border: `1px solid ${C.divider}` }}>
           {[
             { value: "volunteer", label: "Sou Voluntário" },
             { value: "org",       label: "Sou uma Associação" },
@@ -164,7 +168,7 @@ export default function GinjaPage() {
               fontFamily: F.sora, fontSize: 14, fontWeight: 600,
               padding: "10px 24px", borderRadius: 999, border: "none", cursor: "pointer",
               background: role === value ? C.teal : "transparent",
-              color: role === value ? C.white : C.subtle,
+              color: role === value ? C.whiteColor : C.subtle,
               transition: "all 0.15s",
             }}>{label}</button>
           ))}
@@ -179,7 +183,7 @@ export default function GinjaPage() {
 
         {/* Form Card */}
         <div className="mobile-full-width" style={{
-          background: C.white, borderRadius: 20, padding: "clamp(24px, 4vw, 40px)",
+          background: C.whiteColor, borderRadius: 20, padding: "clamp(24px, 4vw, 40px)",
           display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 680,
           boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
           border: `1px solid ${C.divider}`,
@@ -238,12 +242,12 @@ export default function GinjaPage() {
                 style={{ marginTop: 3, width: 15, height: 15, flexShrink: 0 }}
               />
               <span style={{ fontFamily: F.dm, fontSize: 14, color: C.subtle, lineHeight: 1.6 }}>
-                Aceito ser contactado pelo Ginja sobre o próximo passo.
+                Aceito ser contactado pelo Ginjas sobre o próximo passo.
               </span>
             </label>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={() => setSubmitted(true)} style={{
-                background: C.burgundy, color: C.white,
+                background: C.burgundy, color: C.whiteColor,
                 fontFamily: F.sora, fontSize: 15, fontWeight: 700,
                 padding: "14px 48px", borderRadius: 999,
                 border: "none", cursor: "pointer",

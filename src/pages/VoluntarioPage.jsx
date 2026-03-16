@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Layout from "../Layout";
-import { Field, Divider, labelStyle, inputStyle } from "../GinjaPage";
+import { Field, Divider, labelStyle, inputStyle } from "../GinjasPage.jsx";
 
-const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", muted: "#5A5A5A", subtle: "#666", divider: "#EAEAEA", heroBg: "linear-gradient(180deg, #FFF8E7 0%, #FFFDF5 45%, #F0F7E4 100%)" };
+const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", muted: "#5A5A5A", subtle: "#666", divider: "#EAEAEA", heroBg: "#F9F4E8" };
 const F = { sora: "'Sora', sans-serif", inter: "'Inter', sans-serif", dm: "'DM Sans', sans-serif" };
 
 const perks = [
@@ -45,7 +45,7 @@ export default function VoluntarioPage() {
       </section>
 
       {/* Form */}
-      <section style={{ background: "#FFFFFF", padding: "var(--section-padding)", display: "flex", justifyContent: "center" }}>
+      <section style={{ background: "#F9F4E8", padding: "var(--section-padding)", display: "flex", justifyContent: "center" }}>
         {!submitted ? (
           <div className="mobile-full-width" style={{
             background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
@@ -111,7 +111,7 @@ export default function VoluntarioPage() {
                 <label style={labelStyle}>Sobre você</label>
                 <textarea
                   rows={4}
-                  placeholder="Descreva brevemente sua experiência e por que quer ser voluntário no Ginja..."
+                  placeholder="Descreva brevemente sua experiência e por que quer ser voluntário no Ginjas..."
                   style={{ ...inputStyle, resize: "none", fontFamily: F.inter }}
                 />
               </div>

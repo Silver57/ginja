@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Layout from "../Layout";
-import { Field, Divider, labelStyle, inputStyle } from "../GinjaPage";
+import { Field, Divider, labelStyle, inputStyle } from "../GinjasPage.jsx";
 
-const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", subtle: "#666", divider: "#EAEAEA", heroBg: "linear-gradient(180deg, #FFF8E7 0%, #FFFDF5 45%, #F0F7E4 100%)" };
+const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", subtle: "#666", divider: "#EAEAEA", heroBg: "#F9F4E8" };
 const F = { sora: "'Sora', sans-serif", inter: "'Inter', sans-serif", dm: "'DM Sans', sans-serif" };
 
 const channels = [
-  { emoji: "📧", label: "E-mail", value: "oi@ginja.org" },
-  { emoji: "🐦", label: "Twitter", value: "@ginjaorg" },
-  { emoji: "💼", label: "LinkedIn", value: "linkedin.com/company/ginja" },
+  { emoji: "📧", label: "E-mail", value: "oi@ginjas.org" },
+  { emoji: "🐦", label: "Twitter", value: "@ginjasorg" },
+  { emoji: "💼", label: "LinkedIn", value: "linkedin.com/company/ginjas" },
 ];
 
 export default function ContatoPage() {
@@ -22,11 +22,11 @@ export default function ContatoPage() {
           Fale Conosco
         </h1>
         <p style={{ fontFamily: F.dm, fontSize: 19, color: "#5A5A5A", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
-          Tem uma dúvida, sugestão ou quer saber mais sobre o Ginja? Estamos aqui.
+          Tem uma dúvida, sugestão ou quer saber mais sobre o Ginjas? Estamos aqui.
         </p>
       </section>
 
-      <section className="mobile-stack" style={{ background: "#FFFFFF", padding: "var(--section-padding)", display: "flex", gap: 64, alignItems: "flex-start", justifyContent: "center" }}>
+      <section className="mobile-stack" style={{ background: "#F9F4E8", padding: "var(--section-padding)", display: "flex", gap: 64, alignItems: "flex-start", justifyContent: "center" }}>
         {/* Contact channels */}
         <div className="mobile-full-width" style={{ display: "flex", flexDirection: "column", gap: 24, width: 260, flexShrink: 0 }}>
           <h2 style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.dark }}>Canais diretos</h2>
