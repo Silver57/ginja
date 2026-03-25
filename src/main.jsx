@@ -7,6 +7,8 @@ import SobrePage from "./pages/SobrePage";
 import MissaoPage from "./pages/MissaoPage";
 import ContatoPage from "./pages/ContatoPage";
 import VoluntarioPage from "./pages/VoluntarioPage";
+import ArtigosPage from "./pages/ArtigosPage";
+import SiteParaAssociacoesPage from "./pages/articles/SiteParaAssociacoesPage";
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -20,6 +22,8 @@ createRoot(document.getElementById("app")).render(
         <Route path="/participe" element={<VoluntarioPage />} />
         <Route path="/apoio" element={<ContatoPage />} />
         <Route path="/privacidade" element={<SobrePage />} />
+        <Route path="/artigos" element={<ArtigosPage />} />
+        <Route path="/artigos/site-para-associacoes" element={<SiteParaAssociacoesPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

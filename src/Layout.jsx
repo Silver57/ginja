@@ -79,6 +79,7 @@ export default function Layout({ children }) {
               {[
                 { label: "Sobre", to: "/sobre" },
                 { label: "Missão", to: "/missao" },
+                { label: "Artigos", to: "/artigos" },
                 { label: "Contato", to: "/contato" },
               ].map(({ label, to }) => (
                 <Link key={to} to={to} style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 500, color: "#4A4A4A" }}>
@@ -118,6 +119,7 @@ export default function Layout({ children }) {
               <FooterColumn title="Empresa" links={[
                 { label: "Sobre", to: "/sobre" },
                 { label: "Missão", to: "/missao" },
+                { label: "Artigos", to: "/artigos" },
                 { label: "Contato", to: "/contato" },
                 { label: "Política de Privacidade", to: "/privacidade" },
               ]} />
