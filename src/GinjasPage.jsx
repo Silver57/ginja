@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "./Layout";
+import { supabase } from "./lib/supabase.js";
 
 // ── Design tokens ─────────────────────────────────────────
 const C = {
@@ -25,10 +26,43 @@ const F = {
   dm: "'DM Sans', sans-serif",
 };
 
+const AREAS = ["Design & UX", "Tecnologia", "Marketing", "Jurídico", "Finanças", "Gestão", "Educação", "Saúde", "Outro"];
+
 export default function GinjasPage() {
   const [role, setRole] = useState("volunteer");
-  const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    name: "", email: "", area: "", hoursPerWeek: "", improvement: "", love: "",
+    helpful: "", orgAreas: [], urgentTasks: "", monthlySpend: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  function setField(key) {
+    return (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  }
+
+  function toggleArea(area) {
+    setForm((f) => ({
+      ...f,
+      orgAreas: f.orgAreas.includes(area)
+        ? f.orgAreas.filter((a) => a !== area)
+        : [...f.orgAreas, area],
+    }));
+  }
+
+  async function handleSubmit() {
+    setLoading(true);
+    setError(null);
+    const table = role === "volunteer" ? "volunteer_feedback" : "org_feedback";
+    const payload = role === "volunteer"
+      ? { name: form.name, email: form.email, area: form.area, hours_per_week: form.hoursPerWeek, improvement: form.improvement, love: form.love }
+      : { helpful: form.helpful, org_areas: form.orgAreas, urgent_tasks: form.urgentTasks, monthly_spend: form.monthlySpend };
+    const { error: err } = await supabase.from(table).insert([payload]);
+    setLoading(false);
+    if (err) { console.error(`[${table}] submit failed:`, err); setError("Erro ao enviar. Tente novamente."); return; }
+    setSubmitted(true);
+  }
 
   function scrollToForm(selectedRole) {
     setRole(selectedRole);
@@ -155,7 +189,7 @@ export default function GinjasPage() {
         {/* Section intro */}
         <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 16, maxWidth: 520 }}>
           <h2 style={{ fontFamily: F.sora, fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, color: C.burgundy, lineHeight: 1.6 }}>
-            Estamos ansiosos para começar.<br />Mas primeiro precisamos de te conhecer.
+            A tua opinião importa.<br />Ajuda-nos a construir isto juntos.
           </h2>
         </div>
 
@@ -178,8 +212,8 @@ export default function GinjasPage() {
         {/* Dynamic subheading */}
         <p style={{ fontFamily: F.dm, fontSize: 15, color: C.subtle, lineHeight: 1.7, maxWidth: 460, textAlign: "center", marginTop: -16 }}>
           {role === "volunteer"
-            ? "Diz-nos quem és e o que sabes fazer. Nós encontramos a associação certa para ti."
-            : "Conta-nos o que a tua associação precisa. Encontramos o profissional certo para ajudar."}
+            ? "Diz-nos quem és e partilha a tua visão. O teu feedback vai moldar a plataforma."
+            : "Conta-nos o que a vossa associação precisa. O vosso feedback é essencial para nós."}
         </p>
 
         {/* Form Card */}
@@ -189,74 +223,123 @@ export default function GinjasPage() {
           boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
           border: `1px solid ${C.divider}`,
         }}>
-          {/* Contact info */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>
-              {role === "volunteer" ? "Os teus dados" : "Dados da associação"}
-            </span>
-            <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
-              <Field label="Nome completo" placeholder="O teu nome" />
-              <Field label="E-mail" placeholder="o.teu@email.com" type="email" />
+          {/* Volunteer fields */}
+          {role === "volunteer" && (<>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>Os teus dados</span>
+              <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
+                <Field label="Nome completo" placeholder="O teu nome" value={form.name} onChange={setField("name")} />
+                <Field label="E-mail" placeholder="o.teu@email.com" type="email" value={form.email} onChange={setField("email")} />
+              </div>
+              <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                  <label style={labelStyle}>Área de especialização</label>
+                  <select style={inputStyle} value={form.area} onChange={setField("area")}>
+                    <option value="">Seleciona a tua área</option>
+                    <option>Design & UX</option>
+                    <option>Tecnologia & Desenvolvimento</option>
+                    <option>Marketing & Comunicação</option>
+                    <option>Jurídico</option>
+                    <option>Finanças & Contabilidade</option>
+                    <option>Gestão & Estratégia</option>
+                    <option>Educação</option>
+                    <option>Saúde</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                  <label style={labelStyle}>Horas por semana disponíveis</label>
+                  <select style={inputStyle} value={form.hoursPerWeek} onChange={setField("hoursPerWeek")}>
+                    <option value="">Quanto tempo podes dedicar?</option>
+                    <option>Menos de 2h/semana</option>
+                    <option>2–5h/semana</option>
+                    <option>5–10h/semana</option>
+                    <option>Mais de 10h/semana</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
-              {role === "org"
-                ? <Field label="Nome da associação" placeholder="Nome da vossa organização" />
-                : <Field label="Área profissional" placeholder="Ex: Design, Contabilidade, IT…" />}
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                <label style={labelStyle}>País</label>
-                <select style={inputStyle}>
-                  <option value="">Seleciona o teu país</option>
-                  <option>Portugal</option>
-                  <option>Brasil</option>
-                  <option>Outro</option>
+            <Divider />
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>A tua opinião</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label style={labelStyle}>Na tua opinião, qual seria a maior ajuda que poderias dar dentro da tua área de especialidade?</label>
+                <textarea rows={4} placeholder="Partilha as tuas sugestões…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.improvement} onChange={setField("improvement")} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label style={labelStyle}>Deixa um elogio, crítica ou mensagem de apoio 🫶</label>
+                <textarea rows={3} placeholder="Diz-nos o que quiseres…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.love} onChange={setField("love")} />
+              </div>
+            </div>
+          </>)}
+
+          {/* Org fields */}
+          {role === "org" && (<>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>A vossa associação</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label style={labelStyle}>Isto seria útil para a vossa associação?</label>
+                <select style={inputStyle} value={form.helpful} onChange={setField("helpful")}>
+                  <option value="">Seleciona uma opção</option>
+                  <option>Sim, muito!</option>
+                  <option>Provavelmente</option>
+                  <option>Talvez</option>
+                  <option>Não realmente</option>
+                </select>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <label style={labelStyle}>Em que áreas precisam de ajuda?</label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {AREAS.map((a) => {
+                    const active = form.orgAreas.includes(a);
+                    return (
+                      <button key={a} type="button" onClick={() => toggleArea(a)} style={{
+                        padding: "6px 14px", borderRadius: 999, fontSize: 13, fontFamily: F.dm, cursor: "pointer",
+                        border: `1px solid ${active ? C.teal : "#E2E8F0"}`,
+                        background: active ? C.tealLight : "transparent",
+                        color: active ? C.teal : C.subtle,
+                        transition: "all 0.12s",
+                      }}>{a}</button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            <Divider />
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>Detalhes</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label style={labelStyle}>Quais são as vossas tarefas mais urgentes?</label>
+                <textarea rows={4} placeholder="Descreve os desafios mais urgentes da vossa organização…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.urgentTasks} onChange={setField("urgentTasks")} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label style={labelStyle}>Quanto gastam por mês em serviços que voluntários poderiam ajudar?</label>
+                <select style={inputStyle} value={form.monthlySpend} onChange={setField("monthlySpend")}>
+                  <option value="">Seleciona um intervalo</option>
+                  <option>Não gastamos</option>
+                  <option>Menos de €500/mês</option>
+                  <option>€500–€2.000/mês</option>
+                  <option>€2.000–€5.000/mês</option>
+                  <option>Mais de €5.000/mês</option>
                 </select>
               </div>
             </div>
-          </div>
+          </>)}
 
-          <Divider />
-
-          {/* Details */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>
-              {role === "volunteer" ? "O que podes oferecer" : "O que precisas"}
-            </span>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <textarea
-                rows={4}
-                placeholder={role === "volunteer"
-                  ? "Descreve as tuas competências e em que tipo de projetos tens interesse…"
-                  : "Descreve o desafio ou projeto em que a tua associação precisa de ajuda…"}
-                style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }}
-              />
-            </div>
-          </div>
-
-          <Divider />
-
-          {/* Consent + submit */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
-              <input
-                type="checkbox" checked={consent}
-                onChange={(e) => setConsent(e.target.checked)}
-                style={{ marginTop: 3, width: 15, height: 15, flexShrink: 0 }}
-              />
-              <span style={{ fontFamily: F.dm, fontSize: 14, color: C.subtle, lineHeight: 1.6 }}>
-                Aceito ser contactado pelo Ginjas sobre o próximo passo.
-              </span>
-            </label>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={() => setSubmitted(true)} style={{
-                background: C.burgundy, color: C.whiteColor,
-                fontFamily: F.sora, fontSize: 15, fontWeight: 700,
-                padding: "14px 48px", borderRadius: 999,
-                border: "none", cursor: "pointer",
-                boxShadow: "0 4px 16px rgba(139,30,63,0.2)",
-              }}>
-                {role === "volunteer" ? "Quero ser voluntário" : "Quero apoio para a minha associação"}
-              </button>
-            </div>
+          {error && (
+            <p style={{ fontFamily: F.dm, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
+          )}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <button onClick={handleSubmit} disabled={loading} style={{
+              background: C.burgundy, color: C.whiteColor,
+              fontFamily: F.sora, fontSize: 15, fontWeight: 700,
+              padding: "14px 48px", borderRadius: 999,
+              border: "none", cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
+              boxShadow: "0 4px 16px rgba(139,30,63,0.2)",
+            }}>
+              {loading ? "A enviar…" : "Enviar feedback"}
+            </button>
           </div>
         </div>
 
@@ -268,7 +351,7 @@ export default function GinjasPage() {
             padding: "14px 28px", borderRadius: 12,
           }}>
             <CheckCircleIcon />
-            Obrigado! Entraremos em contacto em breve.
+            Obrigado pelo feedback! A tua opinião vai ajudar-nos a construir algo melhor.
           </div>
         )}
       </section>
@@ -288,11 +371,11 @@ export const inputStyle = {
   color: "#1F1F1F", background: "#FFFFFF",
 };
 
-export function Field({ label, placeholder, type = "text" }) {
+export function Field({ label, placeholder, type = "text", value, onChange }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
       <label style={labelStyle}>{label}</label>
-      <input type={type} placeholder={placeholder} style={inputStyle} />
+      <input type={type} placeholder={placeholder} style={inputStyle} value={value ?? ""} onChange={onChange} />
     </div>
   );
 }

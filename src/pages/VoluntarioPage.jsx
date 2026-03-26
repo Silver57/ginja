@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../Layout";
 import { Field, Divider, labelStyle, inputStyle } from "../GinjasPage.jsx";
+import { supabase } from "../lib/supabase.js";
 
 const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", muted: "#5A5A5A", subtle: "#666", divider: "#EAEAEA", heroBg: "#F9F4E8" };
 const F = { sora: "'Sora', sans-serif", inter: "'Inter', sans-serif", dm: "'DM Sans', sans-serif" };
@@ -14,6 +15,30 @@ const perks = [
 
 export default function VoluntarioPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", linkedin: "", country: "", area: "", availability: "", about: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  function setField(key) {
+    return (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  }
+
+  async function handleSubmit() {
+    setLoading(true);
+    setError(null);
+    const { error: err } = await supabase.from("voluntario_submissions").insert([{
+      name: form.name,
+      email: form.email,
+      linkedin: form.linkedin,
+      country: form.country,
+      area: form.area,
+      availability: form.availability,
+      about: form.about,
+    }]);
+    setLoading(false);
+    if (err) { console.error("[voluntario_submissions] submit failed:", err); setError("Erro ao enviar. Tente novamente."); return; }
+    setSubmitted(true);
+  }
 
   return (
     <Layout>
@@ -61,14 +86,14 @@ export default function VoluntarioPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Informações pessoais</span>
               <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
-                <Field label="Nome Completo" placeholder="Seu nome completo" />
-                <Field label="E-mail" placeholder="seu@email.com" type="email" />
+                <Field label="Nome Completo" placeholder="Seu nome completo" value={form.name} onChange={setField("name")} />
+                <Field label="E-mail" placeholder="seu@email.com" type="email" value={form.email} onChange={setField("email")} />
               </div>
               <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
-                <Field label="LinkedIn (opcional)" placeholder="linkedin.com/in/seu-perfil" />
+                <Field label="LinkedIn (opcional)" placeholder="linkedin.com/in/seu-perfil" value={form.linkedin} onChange={setField("linkedin")} />
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
                   <label style={labelStyle}>País</label>
-                  <select style={inputStyle}>
+                  <select style={inputStyle} value={form.country} onChange={setField("country")}>
                     <option value="">Selecione seu país</option>
                     <option>Brasil</option>
                     <option>Portugal</option>
@@ -84,7 +109,7 @@ export default function VoluntarioPage() {
               <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Suas habilidades</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={labelStyle}>Área de atuação</label>
-                <select style={inputStyle}>
+                <select style={inputStyle} value={form.area} onChange={setField("area")}>
                   <option value="">Selecione sua área</option>
                   <option>Design & UX</option>
                   <option>Tecnologia & Desenvolvimento</option>
@@ -99,7 +124,7 @@ export default function VoluntarioPage() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <label style={labelStyle}>Disponibilidade mensal</label>
-                <select style={inputStyle}>
+                <select style={inputStyle} value={form.availability} onChange={setField("availability")}>
                   <option value="">Quanto tempo você pode dedicar?</option>
                   <option>Até 5 horas/mês</option>
                   <option>5–10 horas/mês</option>
@@ -113,23 +138,31 @@ export default function VoluntarioPage() {
                   rows={4}
                   placeholder="Descreva brevemente sua experiência e por que quer ser voluntário no Ginjas..."
                   style={{ ...inputStyle, resize: "none", fontFamily: F.inter }}
+                  value={form.about}
+                  onChange={setField("about")}
                 />
               </div>
             </div>
 
             <Divider />
 
+            {error && (
+              <p style={{ fontFamily: F.inter, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
+            )}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button
-                onClick={() => setSubmitted(true)}
+                onClick={handleSubmit}
+                disabled={loading}
                 style={{
                   background: C.teal, color: "#FFFFFF",
                   fontFamily: F.inter, fontSize: 16, fontWeight: 600,
-                  padding: "16px 56px", borderRadius: 999, border: "none", cursor: "pointer",
+                  padding: "16px 56px", borderRadius: 999, border: "none",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.7 : 1,
                   boxShadow: "0 4px 16px rgba(63,167,150,0.25)",
                 }}
               >
-                Quero ser voluntário
+                {loading ? "A enviar…" : "Quero ser voluntário"}
               </button>
             </div>
           </div>
