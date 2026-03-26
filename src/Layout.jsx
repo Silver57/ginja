@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const C = {
   teal: "#3FA796",
@@ -17,6 +17,18 @@ const F = {
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  function handleParticipe() {
+    if (location.pathname === "/") {
+      document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }
 
   return (
     <>
@@ -88,7 +100,7 @@ export default function Layout({ children }) {
               ))}
             </div>
             <button
-              onClick={() => navigate("/participe")}
+              onClick={handleParticipe}
               style={{
                 background: C.teal, color: C.white, fontFamily: F.inter,
                 fontSize: 14, fontWeight: 600, padding: "10px 20px",
