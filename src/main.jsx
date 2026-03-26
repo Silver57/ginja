@@ -1,7 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { inject } from "@vercel/analytics";
 import "./style.css";
+
+inject();
 import GinjasPage from "./GinjasPage.jsx";
 import SobrePage from "./pages/SobrePage";
 import MissaoPage from "./pages/MissaoPage";
