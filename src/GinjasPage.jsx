@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Layout from "./Layout";
 import { supabase } from "./lib/supabase.js";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ── Design tokens ─────────────────────────────────────────
 const C = {
@@ -14,10 +18,10 @@ const C = {
   subtle: "#6B6B6B",
   white: "#F9F4E8",
   divider: "#E8E8E8",
-  heroBg: "linear-gradient(rgba(249, 244, 232, 0.4), rgba(249, 244, 232, 0.4)), url('/images/hero_image_ginja.png') center/cover no-repeat",
   cardBg: "#FFFFFF",
   whiteColor: "#FFFFFF",
-  heroSectionBg: "linear-gradient(rgba(249, 244, 232, 0.4), rgba(249, 244, 232, 0.4)), url('/images/hero_section_2.png') center/cover no-repeat",
+  orange: "#F4A623",
+
 };
 
 const F = {
@@ -29,6 +33,46 @@ const F = {
 const AREAS = ["Design & UX", "Tecnologia", "Marketing", "Jurídico", "Finanças", "Gestão", "Educação", "Saúde", "Outro"];
 
 export default function GinjasPage() {
+  const bgRef = useRef(null);
+  const mosaicRef = useRef(null);
+
+  useEffect(() => {
+    // Make body transparent so the fixed background image shows through
+    const prev = document.body.style.background;
+    document.body.style.background = "transparent";
+    return () => { document.body.style.background = prev; };
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      gsap.to(bgRef.current, {
+        scale: 1.12,
+        ease: "none",
+        scrollTrigger: {
+          start: "top top",
+          end: "+=900",
+          scrub: 1.5,
+        },
+      });
+
+      gsap.fromTo(mosaicRef.current,
+        { y: 120 },
+        {
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: mosaicRef.current,
+            start: "top 100%",
+            end: "top 20%",
+            scrub: 1,
+          },
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, []);
+
   const [role, setRole] = useState("volunteer");
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -51,9 +95,16 @@ export default function GinjasPage() {
     }));
   }
 
-  async function handleSubmit() {
-    setLoading(true);
+  async function handleSubmit(e) {
+    e.preventDefault();
     setError(null);
+    if (role === "volunteer") {
+      if (!form.name.trim()) { setError("Por favor, insere o teu nome."); return; }
+      if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError("Por favor, insere um e-mail válido."); return; }
+    } else {
+      if (!form.helpful) { setError("Por favor, indica se isto seria útil para a vossa associação."); return; }
+    }
+    setLoading(true);
     const table = role === "volunteer" ? "volunteer_feedback" : "org_feedback";
     const payload = role === "volunteer"
       ? { name: form.name, email: form.email, area: form.area, hours_per_week: form.hoursPerWeek, improvement: form.improvement, love: form.love }
@@ -70,142 +121,229 @@ export default function GinjasPage() {
   }
 
   return (
-    <Layout>
-      {/* ── Hero Section ─────────────────────────────── */}
-      <section style={{ background: C.heroSectionBg, width: "100%" }}>
-        <div style={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          gap: 32, padding: "var(--hero-padding)", textAlign: "center",
+    <Layout noBg>
+      {/* ── Fixed background image ─────────────────────
+           Portalled to document.body so Layout's overflow-x
+           doesn't clip it. GSAP zooms this on scroll.       */}
+      {createPortal(
+        <div
+          ref={bgRef}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: -1,
+            backgroundImage: "url('/images/hero_section_2.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            willChange: "transform",
+            transformOrigin: "center center",
+          }}
+        />,
+        document.body
+      )}
+
+      {/* ── Hero — full viewport, content over fixed image ── */}
+      <section style={{ position: "relative", height: "100vh", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "10vh" }}>
+
+        <div className="mobile-stack" style={{
+          position: "relative", zIndex: 1,
+          display: "flex", flexDirection: "column", alignItems: "flex-start",
+          justifyContent: "flex-start", gap: 32,
+          padding: "var(--hero-padding)", width: "100%", maxWidth: "1440px",
         }}>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <h1
             style={{
               fontFamily: F.sora, fontWeight: 800,
-              color: C.burgundy, lineHeight: 1.2, letterSpacing: "-0.01em",
-              display: "flex", flexDirection: "column", gap: "8px"
+              color: C.burgundy, lineHeight: 1.25, letterSpacing: "-0.01em",
+              display: "flex", flexDirection: "column", gap: 6, flex: 1,
             }}
           >
-            <span style={{ fontSize: "clamp(44px, 8vw, 78px)" }}>Há quem saiba fazer.</span>
-            <span style={{ fontSize: "clamp(36px, 6vw, 64px)" }}>Há quem precise que aconteça.</span>
-            <span style={{ fontSize: "clamp(28px, 4vw, 50px)" }}>Ainda não se encontraram.</span>
-          </motion.h1>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="mobile-stack-buttons"
-            style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}
-          >
+            <span style={{ fontSize: "clamp(28px, 4vw, 52px)" }}>Há quem saiba fazer.</span>
+            <span style={{ fontSize: "clamp(24px, 3.2vw, 44px)" }}>Há quem precise que aconteça.</span>
+            <span style={{ fontSize: "clamp(20px, 2.5vw, 36px)" }}>Ainda não se encontraram.</span>
+          </h1>
+          <div style={{ display: "flex", flexDirection: "row", gap: 16, flexShrink: 0, flexWrap: "wrap" }}>
             <button onClick={() => scrollToForm("volunteer")} style={{
               background: C.teal, color: C.whiteColor, fontFamily: F.dm,
-              fontSize: 14, fontWeight: 700, padding: "12px 28px",
-              borderRadius: 12, border: "none", cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(63,167,150,0.25)",
+              fontSize: 16, fontWeight: 700, padding: "18px 40px",
+              borderRadius: 0, border: "none", cursor: "pointer",
+              boxShadow: "0 6px 24px rgba(63,167,150,0.35)",
+              letterSpacing: "0.01em",
             }}>Sou Voluntário</button>
             <button onClick={() => scrollToForm("org")} style={{
-              background: C.burgundy, color: C.whiteColor, fontFamily: F.dm,
-              fontSize: 14, fontWeight: 700, padding: "12px 28px",
-              borderRadius: 12, border: "none", cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(139,30,63,0.25)",
+              background: "transparent", color: C.burgundy, fontFamily: F.dm,
+              fontSize: 16, fontWeight: 700, padding: "18px 40px",
+              borderRadius: 0, border: `2px solid ${C.burgundy}`, cursor: "pointer",
+              letterSpacing: "0.01em",
             }}>Sou uma Associação</button>
-          </motion.div>
+          </div>
         </div>
       </section>
 
+      {/* ── Description ──────────────────────────────── */}
+      <section style={{
+        width: "90%", margin: "0 auto",
+        padding: "clamp(48px, 7vw, 96px) 0 clamp(32px, 4vw, 56px)",
+        display: "flex", flexDirection: "column", gap: 12,
+      }}>
+        <p style={{
+          fontFamily: F.sora, fontWeight: 700,
+          fontSize: "clamp(20px, 2.4vw, 30px)",
+          color: C.burgundy, lineHeight: 1.35, margin: 0,
+          maxWidth: 720,
+        }}>
+          Passamos a explicar
+        </p>
+        <p style={{
+          fontFamily: F.dm, fontSize: "clamp(15px, 1.4vw, 18px)",
+          color: C.muted, lineHeight: 1.7, margin: 0, maxWidth: 600,
+        }}>
+          Contabilistas, Advogados, Designers, Programadores… Todos têm uma capacidade especial para ajudar uma associação a crescer, mas aqueles que querem ajudar não sabem onde procurar.
+        </p>
+      </section>
+
       {/* ── How It Works ─────────────────────────────── */}
-      <section style={{ background: C.white, width: "100%", padding: "var(--section-padding)" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexDirection: "column", gap: 36 }}>
-          <div style={{ textAlign: "center" }}>
-            <h2 style={{ fontFamily: F.sora, fontSize: "clamp(22px, 2.5vw, 32px)", fontWeight: 700, color: C.dark, marginBottom: 8 }}>
-              Como funciona
-            </h2>
-          </div>
-          <div className="mobile-stack" style={{ display: "flex", gap: 24, alignItems: "stretch" }}>
-            {[
-              {
-                n: "Fase 1", img: "/images/generated_image1.png",
-                title: "Querer ajudar e querer ser ajudado",
-                paras: [
-                  ["Há profissionais com muito para dar e associações com muito por fazer. O problema é que raramente se encontram. Nós tratamos disso. ", {h:"Encontramos a associação certa para o teu perfil e as tuas competências."}, ],
-                  ["Mas antes de avançares, é importante saberes: ", {h:"isto não é voluntariado ocasional."}, " Quando uma associação conta contigo, conta a sério. Pedimos-te ", {h:"compromisso com prazos, entregas e disponibilidade real."}, ],
-                ],
-              },
-              {
-                n: "Fase 2", img: "/images/generated_image2.png",
-                title: "Juntos, lado a lado",
-                paras: [
-                  ["Depois do match, começa o trabalho. Tu trazes o conhecimento técnico, a associação traz o contexto e a missão. ", {h:"Trabalham como parceiros"}, " — não és um empregado nem a associação é tua cliente."],
-                  [{h:"Nós acompanhamos o processo do início ao fim"}, ", garantindo que a comunicação flui e que ambos os lados têm o que precisam para avançar."],
-                ],
-              },
-              {
-                n: "Fase 3", img: "/images/generated_image3.png",
-                title: "O impacto que constróis",
-                paras: [
-                  ["Um site que finalmente funciona. Uma contabilidade organizada. Uma campanha que chegou a quem precisava. ", {h:"São estes os resultados quando alguém que sabe se junta a quem precisa."} ],
-                  [{h:"Tu ganhas propósito e experiência com significado."}, " A associação ganha capacidade que antes não tinha. E as comunidades que ela serve ganham um mundo um bocadinho melhor."],
-                ],
-                cta: "Junta-te a nós e coloca o que sabes ao serviço de quem precisa.",
-              },
-            ].map(({ n, img, title, paras, cta }) => (
-              <div key={n} style={{
-                flex: 1, background: C.whiteColor, borderRadius: 20, overflow: "hidden",
-                display: "flex", flexDirection: "column",
-                border: `1px solid ${C.divider}`,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
-              }}>
-                <img src={img} alt={title} style={{ width: "100%", height: 280, objectFit: "cover", display: "block" }} />
-                <div style={{ padding: "32px 32px 36px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
-                  <span style={{ fontFamily: F.sora, fontSize: 11, fontWeight: 700, color: C.teal, letterSpacing: 2.5, textTransform: "uppercase" }}>{n}</span>
-                  <h3 style={{ fontFamily: F.sora, fontSize: 21, fontWeight: 700, color: C.dark, lineHeight: 1.4 }}>{title}</h3>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {paras.map((segments, i) => (
-                      <p key={i} style={{ fontFamily: F.dm, fontSize: 16, color: C.subtle, lineHeight: 1.8, margin: 0 }}>
-                        {segments.map((s, j) =>
-                          typeof s === "string"
-                            ? s
-                            : <strong key={j} style={{ color: C.dark, fontWeight: 600 }}>{s.h}</strong>
-                        )}
-                      </p>
-                    ))}
-                  </div>
-                  {cta && (
-                    <p style={{ fontFamily: F.dm, fontSize: 15, fontWeight: 700, color: C.teal, marginTop: "auto", paddingTop: 8 }}>{cta}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+      <section ref={mosaicRef} style={{ width: "90%", margin: "0 auto clamp(60px, 8vw, 100px)" }}>
+        <div className="mosaic-grid">
+            <MosaicTile
+              className="mosaic-tile-tall"
+              img="/images/generated_image1.png"
+              title="O desafio"
+/*              paras={[
+                ["Gerir uma associação social não é facil."],
+              ]}*/
+              bullets={[
+                ["Labirinto burocratico: ", "Ainda não é simples ", {h:"criar uma associação."}],
+                ["Apoio limitado: ", "Muitos dos mecanismos já disponiveis não conseguem dar ", {h:"apoio personalizado"}],
+                  ["Gestão financeira", "É dificil gerir o financimento de uma associação sem ", {h:"conhecimento especializado"}],
+                  ["Encontrar voluntários", "Saber onde encontrar voluntários com as competências certas é um desafio constante para as associações."],
+              ]}
+              bulletGap={28}
+              bgColor="linear-gradient(158deg, #E4F6F3 0%, #9DD8D2 45%, #64B8B0 100%)"
+            />
+
+            {/* Tile 2a — top right, left half: text left, image right */}
+            <MosaicTile
+              className="mosaic-tile-right-a"
+              layout="side"
+              img="/images/casa.svg"
+              title="Voluntários"
+              paras={[
+                ["Sabemos que a vida profissional nem sempre permite dedicar tempo a voluntariado, mas ", {h:"pequenas contribuições regulares"}," podem fazer uma grande diferença."],
+              ]}
+              bgColor="linear-gradient(122deg, #F9EEF3 0%, #E8B4CC 50%, #D48CAC 100%)"
+              decorImg="/images/casa.svg"
+              fillImage
+              imageFit="contain"
+              imageObjPosition="right center"
+              imageScale={1.5}
+              imageFlex={0.75}
+            />
+
+            {/* Tile 2b — text top-left full width, image bottom-left corner */}
+            <MosaicTile
+              className="mosaic-tile-right-b"
+              img="/images/borboletas.svg"
+              title="Associações"
+              paras={[
+                ["A missão da associação deve ser a sua maior preocupação. ", {h:"Gerir um site, campanhas ou contabilidade não deveria ser um obstáculo."}],
+              ]}
+              bgColor="linear-gradient(148deg, #F8C84A 0%, #FBD987 50%, #FEF5E0 100%)"
+              decorImg="/images/borboletas.svg"
+              fillImage
+              imageFit="contain"
+              imageObjPosition="left bottom"
+              imageScale={1.6}
+              imageFlex={0.75}
+            />
+
+            {/* Tile 3 — bottom right */}
+            <MosaicTile
+              className="mosaic-tile-right"
+              layout="side-reverse"
+              img="/images/generated_image3.svg"
+              title="O que fazemos"
+              paras={[
+                [{h:"Criamos a ponte entre associações e voluntários."}, " Uma plataforma onde associações podem encontrar voluntários com as competências de que precisam, e voluntários podem encontrar associações que precisam da sua ajuda. Disponiiblizamo também ferramentas para que o impacto seja máximo"],
+              ]}
+              bgColor="linear-gradient(132deg, #C4698A 0%, #DC98B2 45%, #F4E0EA 100%)"
+              decorImg="/images/generated_image3.png"
+              fillImage
+              imageFit="cover"
+              imageObjPosition="center center"
+              imageScale={0.75}
+              imageFlex={0.7}
+            />
+
+            {/* Tile 4 — row 3, left */}
+            <MosaicTile
+              className="mosaic-tile-bottom-left"
+              layout="side"
+              img="/images/generated_image2.png"
+              title="A plataforma"
+              paras={[
+                ["Não somos apenas uma plataforma de encontro entre voluntários e associações. Nosso objetivo é tornar o voluntariado mais eficaz e impactante, ajudando a conectar pessoas com as causas que mais importam para elas."],
+              ]}
+              bgColor="linear-gradient(118deg, #EAF7F5 0%, #AEDBD7 50%, #74BDB8 100%)"
+              decorImg="/images/generated_image2.png"
+              fillImage
+              imageFit="cover"
+              imageObjPosition="center center"
+              imageScale={0.75}
+            />
+
+            {/* Tile 5 — row 3, right */}
+            <MosaicTile
+              className="mosaic-tile-bottom-right"
+              layout="side"
+              title="Artigos e recursos"
+              paras={[
+                ["Temos também uma base de recursos por onde as associações podem logo começar a aprender e a melhorar. Desde criar um site a gerir as redes sociais, a nossa secção de artigos tem guias práticos e dicas para ajudar as associações a crescerem e terem mais impacto."],
+              ]}
+              bgColor="linear-gradient(142deg, #EE9660 0%, #F5BF90 45%, #FDEEDE 100%)"
+            />
         </div>
       </section>
 
       {/* ── Join Section ─────────────────────────────── */}
       <section id="join" style={{
-        background: C.white, display: "flex", flexDirection: "column",
+        display: "flex", flexDirection: "column",
         alignItems: "center", gap: 32, padding: "var(--section-padding)",
+        background: C.white,
+        position: "relative", zIndex: 1,
       }}>
         {/* Section intro */}
         <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 16, maxWidth: 520 }}>
           <h2 style={{ fontFamily: F.sora, fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, color: C.burgundy, lineHeight: 1.6 }}>
-            A tua opinião importa.<br />Ajuda-nos a construir isto juntos.
+           Ainda estamos a começar<br />Ajuda-nos a construir isto juntos.
           </h2>
         </div>
 
         {/* Role toggle */}
-        <div style={{ display: "flex", background: "rgba(249, 244, 232, 0.7)", borderRadius: 999, padding: 4, gap: 4, border: `1px solid ${C.divider}` }}>
+        <div
+          role="tablist"
+          aria-label="Tipo de utilizador"
+          style={{ display: "flex", background: "rgba(249, 244, 232, 0.7)", borderRadius: 999, padding: 4, gap: 4, border: `1px solid ${C.divider}` }}
+        >
           {[
             { value: "volunteer", label: "Sou Voluntário" },
             { value: "org",       label: "Sou uma Associação" },
           ].map(({ value, label }) => (
-            <button key={value} onClick={() => setRole(value)} style={{
-              fontFamily: F.sora, fontSize: 14, fontWeight: 600,
-              padding: "10px 24px", borderRadius: 999, border: "none", cursor: "pointer",
-              background: role === value ? C.teal : "transparent",
-              color: role === value ? C.whiteColor : C.subtle,
-              transition: "all 0.15s",
-            }}>{label}</button>
+            <button
+              key={value}
+              id={`tab-${value}`}
+              role="tab"
+              aria-selected={role === value}
+              aria-controls={`panel-${value}`}
+              onClick={() => setRole(value)}
+              style={{
+                fontFamily: F.sora, fontSize: 14, fontWeight: 600,
+                padding: "10px 24px", borderRadius: 999, border: "none", cursor: "pointer",
+                background: role === value ? C.teal : "transparent",
+                color: role === value ? C.whiteColor : C.subtle,
+                transition: "all 0.15s",
+              }}
+            >{label}</button>
           ))}
         </div>
 
@@ -217,24 +355,31 @@ export default function GinjasPage() {
         </p>
 
         {/* Form Card */}
-        <div className="mobile-full-width" style={{
-          background: C.whiteColor, borderRadius: 20, padding: "clamp(24px, 4vw, 40px)",
-          display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 680,
-          boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
-          border: `1px solid ${C.divider}`,
-        }}>
+        <form
+          id={`panel-${role}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${role}`}
+          onSubmit={handleSubmit}
+          className="mobile-full-width"
+          style={{
+            background: C.whiteColor, borderRadius: 20, padding: "clamp(24px, 4vw, 40px)",
+            display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 680,
+            boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
+            border: `1px solid ${C.divider}`,
+          }}
+        >
           {/* Volunteer fields */}
           {role === "volunteer" && (<>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>Os teus dados</span>
               <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
-                <Field label="Nome completo" placeholder="O teu nome" value={form.name} onChange={setField("name")} />
-                <Field label="E-mail" placeholder="o.teu@email.com" type="email" value={form.email} onChange={setField("email")} />
+                <Field label="Nome completo" placeholder="O teu nome" value={form.name} onChange={setField("name")} required />
+                <Field label="E-mail" placeholder="o.teu@email.com" type="email" value={form.email} onChange={setField("email")} required />
               </div>
               <div className="mobile-stack-small" style={{ display: "flex", gap: 16 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                  <label style={labelStyle}>Área de especialização</label>
-                  <select style={inputStyle} value={form.area} onChange={setField("area")}>
+                  <label htmlFor="area-select" style={labelStyle}>Área de especialização</label>
+                  <select id="area-select" style={inputStyle} value={form.area} onChange={setField("area")}>
                     <option value="">Seleciona a tua área</option>
                     <option>Design & UX</option>
                     <option>Tecnologia & Desenvolvimento</option>
@@ -248,8 +393,8 @@ export default function GinjasPage() {
                   </select>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                  <label style={labelStyle}>Horas por semana disponíveis</label>
-                  <select style={inputStyle} value={form.hoursPerWeek} onChange={setField("hoursPerWeek")}>
+                  <label htmlFor="hours-select" style={labelStyle}>Horas por semana disponíveis</label>
+                  <select id="hours-select" style={inputStyle} value={form.hoursPerWeek} onChange={setField("hoursPerWeek")}>
                     <option value="">Quanto tempo podes dedicar?</option>
                     <option>Menos de 2h/semana</option>
                     <option>2–5h/semana</option>
@@ -263,12 +408,12 @@ export default function GinjasPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>A tua opinião</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Na tua opinião, qual seria a maior ajuda que poderias dar dentro da tua área de especialidade?</label>
-                <textarea rows={4} placeholder="Partilha as tuas sugestões…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.improvement} onChange={setField("improvement")} />
+                <label htmlFor="improvement-textarea" style={labelStyle}>Na tua opinião, qual seria a maior ajuda que poderias dar dentro da tua área de especialidade?</label>
+                <textarea id="improvement-textarea" rows={4} placeholder="Partilha as tuas sugestões…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.improvement} onChange={setField("improvement")} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Deixa um elogio, crítica ou mensagem de apoio 🫶</label>
-                <textarea rows={3} placeholder="Diz-nos o que quiseres…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.love} onChange={setField("love")} />
+                <label htmlFor="love-textarea" style={labelStyle}>Deixa um elogio, crítica ou mensagem de apoio</label>
+                <textarea id="love-textarea" rows={3} placeholder="Diz-nos o que quiseres…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.love} onChange={setField("love")} />
               </div>
             </div>
           </>)}
@@ -278,8 +423,8 @@ export default function GinjasPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>A vossa associação</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Isto seria útil para a vossa associação?</label>
-                <select style={inputStyle} value={form.helpful} onChange={setField("helpful")}>
+                <label htmlFor="helpful-select" style={labelStyle}>Isto seria útil para a vossa associação?</label>
+                <select id="helpful-select" style={inputStyle} value={form.helpful} onChange={setField("helpful")} required aria-required="true">
                   <option value="">Seleciona uma opção</option>
                   <option>Sim, muito!</option>
                   <option>Provavelmente</option>
@@ -287,34 +432,40 @@ export default function GinjasPage() {
                   <option>Não realmente</option>
                 </select>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <label style={labelStyle}>Em que áreas precisam de ajuda?</label>
+              <fieldset style={{ border: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                <legend style={labelStyle}>Em que áreas precisam de ajuda?</legend>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {AREAS.map((a) => {
                     const active = form.orgAreas.includes(a);
                     return (
-                      <button key={a} type="button" onClick={() => toggleArea(a)} style={{
-                        padding: "6px 14px", borderRadius: 999, fontSize: 13, fontFamily: F.dm, cursor: "pointer",
-                        border: `1px solid ${active ? C.teal : "#E2E8F0"}`,
-                        background: active ? C.tealLight : "transparent",
-                        color: active ? C.teal : C.subtle,
-                        transition: "all 0.12s",
-                      }}>{a}</button>
+                      <button
+                        key={a}
+                        type="button"
+                        onClick={() => toggleArea(a)}
+                        aria-pressed={active}
+                        style={{
+                          padding: "6px 14px", borderRadius: 999, fontSize: 13, fontFamily: F.dm, cursor: "pointer",
+                          border: `1px solid ${active ? C.teal : "#E2E8F0"}`,
+                          background: active ? C.tealLight : "transparent",
+                          color: active ? C.teal : C.subtle,
+                          transition: "all 0.12s",
+                        }}
+                      >{a}</button>
                     );
                   })}
                 </div>
-              </div>
+              </fieldset>
             </div>
             <Divider />
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <span style={{ fontFamily: F.sora, fontSize: 13, fontWeight: 700, color: C.teal, letterSpacing: 1.5, textTransform: "uppercase" }}>Detalhes</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Quais são as vossas tarefas mais urgentes?</label>
-                <textarea rows={4} placeholder="Descreve os desafios mais urgentes da vossa organização…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.urgentTasks} onChange={setField("urgentTasks")} />
+                <label htmlFor="urgent-textarea" style={labelStyle}>Quais são as vossas tarefas mais urgentes?</label>
+                <textarea id="urgent-textarea" rows={4} placeholder="Descreve os desafios mais urgentes da vossa organização…" style={{ ...inputStyle, resize: "none", fontFamily: F.dm, lineHeight: 1.6 }} value={form.urgentTasks} onChange={setField("urgentTasks")} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Quanto gastam por mês em serviços que voluntários poderiam ajudar?</label>
-                <select style={inputStyle} value={form.monthlySpend} onChange={setField("monthlySpend")}>
+                <label htmlFor="spend-select" style={labelStyle}>Quanto gastam por mês em serviços que voluntários poderiam ajudar?</label>
+                <select id="spend-select" style={inputStyle} value={form.monthlySpend} onChange={setField("monthlySpend")}>
                   <option value="">Seleciona um intervalo</option>
                   <option>Não gastamos</option>
                   <option>Menos de €500/mês</option>
@@ -327,10 +478,10 @@ export default function GinjasPage() {
           </>)}
 
           {error && (
-            <p style={{ fontFamily: F.dm, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
+            <p role="alert" aria-live="assertive" aria-atomic="true" style={{ fontFamily: F.dm, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
           )}
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <button onClick={handleSubmit} disabled={loading} style={{
+            <button type="submit" disabled={loading} style={{
               background: C.burgundy, color: C.whiteColor,
               fontFamily: F.sora, fontSize: 15, fontWeight: 700,
               padding: "14px 48px", borderRadius: 999,
@@ -341,10 +492,10 @@ export default function GinjasPage() {
               {loading ? "A enviar…" : "Enviar feedback"}
             </button>
           </div>
-        </div>
+        </form>
 
         {submitted && (
-          <div style={{
+          <div role="status" aria-live="polite" aria-atomic="true" style={{
             display: "flex", alignItems: "center", gap: 10,
             background: C.tealLight, color: C.teal,
             fontFamily: F.dm, fontSize: 14, fontWeight: 600,
@@ -356,6 +507,144 @@ export default function GinjasPage() {
         )}
       </section>
     </Layout>
+  );
+}
+
+// ── Mosaic tile ────────────────────────────────────────────
+
+function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTitle, bgColor, decorImg, layout = "top-bottom", imagePadding = "16px", imageSize = "auto", fillImage = false, imageFit = "cover", imageObjPosition = "center center", imageScale = 1, bulletGap = 20, imageFlex = 1 }) {
+  const dark = !!bgColor;
+  const textColor = dark ? C.dark : "#fff";
+  const bodyColor = dark ? "rgba(26,26,26,0.8)" : "rgba(255,255,255,0.85)";
+  const isSide = layout === "side" || layout === "side-reverse";
+  const isReverse = layout === "side-reverse";
+
+  const textPane = (
+    <div style={{
+      flex: 1, padding: isSide ? "28px 28px" : "28px 28px 20px", minWidth: 0,
+      display: "flex", flexDirection: "column", gap: 8,
+      justifyContent: "flex-start",
+      zIndex: 1,
+    }}>
+<h3 style={{
+        fontFamily: F.sora, fontSize: dark ? "clamp(24px, 2.2vw, 34px)" : "clamp(20px, 1.8vw, 28px)", fontWeight: 700,
+        color: textColor, lineHeight: 1.25, margin: 0,
+      }}>{title}</h3>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
+        {paras.map((segments, i) => (
+          <p key={i} style={{
+            fontFamily: F.dm, fontSize: dark ? "clamp(14px, 1.15vw, 17px)" : "clamp(13px, 1.05vw, 16px)",
+            color: bodyColor, lineHeight: 1.65, margin: 0,
+          }}>
+            {segments.map((s, j) =>
+              typeof s === "string"
+                ? s
+                : <strong key={j} style={{ color: textColor, fontWeight: 600 }}>{s.h}</strong>
+            )}
+          </p>
+        ))}
+        {bulletsTitle && (
+          <p style={{
+            fontFamily: F.sora, fontSize: dark ? "clamp(14px, 1.1vw, 16px)" : "clamp(13px, 1.0vw, 15px)",
+            fontWeight: 600, color: textColor, margin: "20px 0 0px",
+          }}>
+            {bulletsTitle}
+            <br />
+          </p>
+        )}
+        {bullets.length > 0 && (
+          <ul style={{
+            margin: bulletsTitle ? "0" : "20px 0 0", paddingLeft: 0, listStylePosition: "inside", display: "flex", flexDirection: "column", gap: bulletGap,
+            fontFamily: F.dm, fontSize: dark ? "clamp(13px, 1.05vw, 16px)" : "clamp(12px, 1.0vw, 15px)",
+            color: bodyColor, lineHeight: 1.5,
+          }}>
+            {bullets.map((b, i) => (
+              <li key={i} style={{ paddingLeft: 4 }}>
+                {Array.isArray(b) ? b.map((s, j) =>
+                  typeof s === "string"
+                    ? (j === 0 ? <><strong key={j} style={{ color: textColor, fontWeight: 700 }}>{s}</strong><br /></> : s)
+                    : <strong key={j} style={{ color: textColor, fontWeight: 600 }}>{s.h}</strong>
+                ) : b}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+
+  const imagePane = (
+    <div style={{
+      flex: imageFlex, minWidth: 0, minHeight: 0,
+      position: "relative",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: fillImage ? 0 : imagePadding,
+      zIndex: 1,
+      overflow: "hidden",
+    }}>
+      {decorImg && (fillImage ? (
+        <img
+          src={decorImg}
+          alt=""
+          role="presentation"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: imageFit, objectPosition: imageObjPosition, pointerEvents: "none", transform: imageScale !== 1 ? `scale(${imageScale})` : undefined, transformOrigin: imageObjPosition }}
+        />
+      ) : (
+        <img
+          src={decorImg}
+          alt=""
+          role="presentation"
+          style={{ maxWidth: "100%", maxHeight: "100%", width: imageSize, height: imageSize, objectFit: "contain", pointerEvents: "none" }}
+        />
+      ))}
+    </div>
+  );
+
+  return (
+    <div
+      className={className}
+      style={{
+        position: "relative", borderRadius: 16, overflow: "hidden",
+        display: "flex",
+        flexDirection: isSide ? "row" : "column",
+      }}
+    >
+      {bgColor && (
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 0,
+          background: bgColor.includes("gradient") ? bgColor : undefined,
+          backgroundColor: bgColor.includes("gradient") ? undefined : bgColor,
+        }} />
+      )}
+
+      {/* Full-bleed background image (only when no bgColor) */}
+      {!bgColor && (
+        <img
+          src={img}
+          alt=""
+          role="presentation"
+          loading="lazy"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+        />
+      )}
+
+      {/* Gradient overlay (only when no bgColor) */}
+      {!bgColor && (
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 0,
+          background: "linear-gradient(to top, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.3) 55%, transparent 100%)",
+        }} />
+      )}
+
+      {/* Grain texture overlay */}
+      <div className="mosaic-tile-texture" />
+
+      {isReverse
+        ? <>{decorImg && imagePane}{textPane}</>
+        : <>{textPane}{decorImg && imagePane}</>
+      }
+    </div>
   );
 }
 
@@ -371,11 +660,12 @@ export const inputStyle = {
   color: "#1F1F1F", background: "#FFFFFF",
 };
 
-export function Field({ label, placeholder, type = "text", value, onChange }) {
+export function Field({ label, placeholder, type = "text", value, onChange, required }) {
+  const id = label.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-      <label style={labelStyle}>{label}</label>
-      <input type={type} placeholder={placeholder} style={inputStyle} value={value ?? ""} onChange={onChange} />
+      <label htmlFor={id} style={labelStyle}>{label}{required && <span aria-hidden="true" style={{ color: "#c0392b", marginLeft: 2 }}>*</span>}</label>
+      <input id={id} type={type} placeholder={placeholder} style={inputStyle} value={value ?? ""} onChange={onChange} required={required} aria-required={required ? "true" : undefined} />
     </div>
   );
 }
@@ -386,7 +676,7 @@ export function Divider() {
 
 function CheckCircleIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   );

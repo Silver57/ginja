@@ -4,7 +4,6 @@
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Global base styles to match the mockup */
 :root {
   color-scheme: light;
 }
@@ -12,8 +11,125 @@ html, body, #app {
   height: 100%;
 }
 body {
-  background: #FAF7F5;
+  background: #F9F4E8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* ── Focus indicators ── */
+:focus-visible {
+  outline: 2px solid #3FA796;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Skip-to-content link ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 8px;
+  z-index: 1000;
+  padding: 8px 16px;
+  background: #3FA796;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Article card hover (replaces JS onMouseEnter/Leave) ── */
+.article-card {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .article-card:hover {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+    transform: translateY(-2px);
+  }
+}
+@media (max-width: 768px) {
+  .article-card {
+    flex-direction: column !important;
+  }
+  .article-card-image {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 200px;
+    object-fit: cover;
+  }
+}
+
+/* ── Mosaic tile grain texture ── */
+.mosaic-tile-texture {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 1;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.58' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-repeat: repeat;
+}
+
+/* ── Mosaic grid ── */
+.mosaic-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  grid-template-rows: 360px 360px 336px;
+  gap: 24px;
+}
+.mosaic-tile-tall {
+  grid-row: 1 / 3;
+  grid-column: 1;
+}
+.mosaic-tile-right-a {
+  grid-column: 2 / 3;
+}
+.mosaic-tile-right-b {
+  grid-column: 3 / 4;
+}
+.mosaic-tile-right {
+  grid-column: 2 / 4;
+}
+.mosaic-tile-bottom-left {
+  grid-column: 1 / 3;
+}
+.mosaic-tile-bottom-right {
+  grid-column: 3 / 4;
+}
+@media (max-width: 768px) {
+  .mosaic-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .mosaic-tile-tall,
+  .mosaic-tile-right,
+  .mosaic-tile-bottom-left,
+  .mosaic-tile-bottom-right {
+    grid-row: auto;
+    grid-column: auto;
+    min-height: 260px;
+  }
+  .mosaic-tile {
+    min-height: 240px;
+  }
+}
+
+/* ── Mobile menu button (hidden on desktop) ── */
+.mobile-menu-btn {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex !important;
+  }
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "../Layout";
-import { Field, Divider, labelStyle, inputStyle } from "../GinjasPage.jsx";
+import { Field, labelStyle, inputStyle } from "../GinjasPage.jsx";
 import { supabase } from "../lib/supabase.js";
 
 const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", subtle: "#666", divider: "#EAEAEA", heroBg: "#F9F4E8" };
@@ -22,7 +22,8 @@ export default function ContatoPage() {
     return (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     setLoading(true);
     setError(null);
     const { error: err } = await supabase.from("contato_submissions").insert([{
@@ -54,7 +55,7 @@ export default function ContatoPage() {
           <h2 style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.dark }}>Canais diretos</h2>
           {channels.map((ch) => (
             <div key={ch.label} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ fontSize: 24 }}>{ch.emoji}</div>
+              <div style={{ fontSize: 24 }} aria-hidden="true">{ch.emoji}</div>
               <div>
                 <p style={{ fontFamily: F.inter, fontSize: 12, fontWeight: 600, color: C.teal, marginBottom: 2 }}>{ch.label}</p>
                 <p style={{ fontFamily: F.inter, fontSize: 14, color: C.dark }}>{ch.value}</p>
@@ -65,18 +66,22 @@ export default function ContatoPage() {
 
         {/* Form */}
         {!submitted ? (
-          <div className="mobile-full-width" style={{
-            background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
-            display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 560,
-            boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
-          }}>
+          <form
+            onSubmit={handleSubmit}
+            className="mobile-full-width"
+            style={{
+              background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
+              display: "flex", flexDirection: "column", gap: 24, width: "100%", maxWidth: 560,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
+            }}
+          >
             <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
               <Field label="Nome" placeholder="Seu nome" value={form.name} onChange={setField("name")} />
               <Field label="E-mail" placeholder="seu@email.com" type="email" value={form.email} onChange={setField("email")} />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={labelStyle}>Assunto</label>
-              <select style={inputStyle} value={form.subject} onChange={setField("subject")}>
+              <label htmlFor="subject-select" style={labelStyle}>Assunto</label>
+              <select id="subject-select" style={inputStyle} value={form.subject} onChange={setField("subject")}>
                 <option value="">Selecione um assunto</option>
                 <option>Quero ser voluntário</option>
                 <option>Sou uma organização</option>
@@ -86,8 +91,9 @@ export default function ContatoPage() {
               </select>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={labelStyle}>Mensagem</label>
+              <label htmlFor="message-textarea" style={labelStyle}>Mensagem</label>
               <textarea
+                id="message-textarea"
                 rows={5}
                 placeholder="Escreva sua mensagem..."
                 style={{ ...inputStyle, resize: "none", fontFamily: F.inter }}
@@ -96,11 +102,11 @@ export default function ContatoPage() {
               />
             </div>
             {error && (
-              <p style={{ fontFamily: F.inter, fontSize: 13, color: "#c0392b" }}>{error}</p>
+              <p role="alert" style={{ fontFamily: F.inter, fontSize: 13, color: "#c0392b" }}>{error}</p>
             )}
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={loading}
                 style={{
                   background: C.burgundy, color: "#FFFFFF",
@@ -108,20 +114,20 @@ export default function ContatoPage() {
                   padding: "13px 40px", borderRadius: 999, border: "none",
                   cursor: loading ? "not-allowed" : "pointer",
                   opacity: loading ? 0.7 : 1,
-                  width: "100%", maxWidth: "fit-content"
+                  width: "100%", maxWidth: "fit-content",
                 }}
               >
                 {loading ? "A enviar…" : "Enviar Mensagem"}
               </button>
             </div>
-          </div>
+          </form>
         ) : (
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
             gap: 16, width: "100%", maxWidth: 560, padding: "64px 40px", textAlign: "center",
             background: "rgba(63,167,150,0.06)", borderRadius: 16, border: `1px solid rgba(63,167,150,0.2)`,
           }}>
-            <div style={{ fontSize: 48 }}>✅</div>
+            <div style={{ fontSize: 48 }} aria-hidden="true">✅</div>
             <h3 style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.dark }}>Mensagem recebida!</h3>
             <p style={{ fontFamily: F.inter, fontSize: 15, color: C.subtle, lineHeight: 1.6 }}>
               Obrigado pelo contato. Nossa equipe responderá em até 2 dias úteis.

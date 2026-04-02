@@ -63,28 +63,21 @@ export default function ArtigosPage() {
                 style={{ textDecoration: "none" }}
               >
                 <article
+                  className="article-card"
                   style={{
                     background: C.whiteColor,
                     borderRadius: 20,
                     overflow: "hidden",
                     border: `1px solid ${C.divider}`,
-                    boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
                     display: "flex",
                     flexDirection: "row",
-                    transition: "box-shadow 0.2s, transform 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,0,0,0.13)";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,0.06)";
-                    e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
                   <img
                     src={a.image}
-                    alt={a.author}
+                    alt={a.title}
+                    className="article-card-image"
+                    loading="lazy"
                     style={{
                       width: 200,
                       minWidth: 200,

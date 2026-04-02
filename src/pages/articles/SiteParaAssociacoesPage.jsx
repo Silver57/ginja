@@ -33,7 +33,7 @@ export default function SiteParaAssociacoesPage() {
           style={{
             maxWidth: 760,
             margin: "0 auto",
-            padding: "0 64px",
+            padding: "0 clamp(20px, 5vw, 64px)",
             display: "flex",
             alignItems: "center",
             gap: 20,

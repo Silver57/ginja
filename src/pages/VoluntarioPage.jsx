@@ -23,7 +23,8 @@ export default function VoluntarioPage() {
     return (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     setLoading(true);
     setError(null);
     const { error: err } = await supabase.from("voluntario_submissions").insert([{
@@ -58,25 +59,29 @@ export default function VoluntarioPage() {
           <p style={{ fontFamily: F.dm, fontSize: 18, color: C.muted, lineHeight: 1.7, marginBottom: 36 }}>
             Junte-se a uma comunidade de profissionais que usam seu talento para apoiar causas que importam.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0 }}>
             {perks.map((p) => (
-              <div key={p.text} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 20 }}>{p.emoji}</span>
+              <li key={p.text} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 20 }} aria-hidden="true">{p.emoji}</span>
                 <span style={{ fontFamily: F.inter, fontSize: 15, color: C.subtle }}>{p.text}</span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
       {/* Form */}
       <section style={{ background: "#F9F4E8", padding: "var(--section-padding)", display: "flex", justifyContent: "center" }}>
         {!submitted ? (
-          <div className="mobile-full-width" style={{
-            background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
-            display: "flex", flexDirection: "column", gap: 28, width: "100%", maxWidth: 680,
-            boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
-          }}>
+          <form
+            onSubmit={handleSubmit}
+            className="mobile-full-width"
+            style={{
+              background: "#FFFFFF", borderRadius: 16, padding: "clamp(20px, 5vw, 40px)",
+              display: "flex", flexDirection: "column", gap: 28, width: "100%", maxWidth: 680,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.06)", border: `1px solid ${C.divider}`,
+            }}
+          >
             <h2 style={{ fontFamily: F.sora, fontSize: 24, fontWeight: 700, color: C.dark }}>
               Cadastre-se como voluntário
             </h2>
@@ -92,8 +97,8 @@ export default function VoluntarioPage() {
               <div className="mobile-stack" style={{ display: "flex", gap: 16 }}>
                 <Field label="LinkedIn (opcional)" placeholder="linkedin.com/in/seu-perfil" value={form.linkedin} onChange={setField("linkedin")} />
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                  <label style={labelStyle}>País</label>
-                  <select style={inputStyle} value={form.country} onChange={setField("country")}>
+                  <label htmlFor="country-select" style={labelStyle}>País</label>
+                  <select id="country-select" style={inputStyle} value={form.country} onChange={setField("country")}>
                     <option value="">Selecione seu país</option>
                     <option>Brasil</option>
                     <option>Portugal</option>
@@ -108,8 +113,8 @@ export default function VoluntarioPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <span style={{ fontFamily: F.inter, fontSize: 15, fontWeight: 600, color: C.dark }}>Suas habilidades</span>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Área de atuação</label>
-                <select style={inputStyle} value={form.area} onChange={setField("area")}>
+                <label htmlFor="vol-area-select" style={labelStyle}>Área de atuação</label>
+                <select id="vol-area-select" style={inputStyle} value={form.area} onChange={setField("area")}>
                   <option value="">Selecione sua área</option>
                   <option>Design & UX</option>
                   <option>Tecnologia & Desenvolvimento</option>
@@ -123,8 +128,8 @@ export default function VoluntarioPage() {
                 </select>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Disponibilidade mensal</label>
-                <select style={inputStyle} value={form.availability} onChange={setField("availability")}>
+                <label htmlFor="availability-select" style={labelStyle}>Disponibilidade mensal</label>
+                <select id="availability-select" style={inputStyle} value={form.availability} onChange={setField("availability")}>
                   <option value="">Quanto tempo você pode dedicar?</option>
                   <option>Até 5 horas/mês</option>
                   <option>5–10 horas/mês</option>
@@ -133,8 +138,9 @@ export default function VoluntarioPage() {
                 </select>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={labelStyle}>Sobre você</label>
+                <label htmlFor="about-textarea" style={labelStyle}>Sobre você</label>
                 <textarea
+                  id="about-textarea"
                   rows={4}
                   placeholder="Descreva brevemente sua experiência e por que quer ser voluntário no Ginjas..."
                   style={{ ...inputStyle, resize: "none", fontFamily: F.inter }}
@@ -147,11 +153,11 @@ export default function VoluntarioPage() {
             <Divider />
 
             {error && (
-              <p style={{ fontFamily: F.inter, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
+              <p role="alert" style={{ fontFamily: F.inter, fontSize: 13, color: "#c0392b", textAlign: "center" }}>{error}</p>
             )}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={loading}
                 style={{
                   background: C.teal, color: "#FFFFFF",
@@ -165,13 +171,13 @@ export default function VoluntarioPage() {
                 {loading ? "A enviar…" : "Quero ser voluntário"}
               </button>
             </div>
-          </div>
+          </form>
         ) : (
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center",
             gap: 16, maxWidth: 520, textAlign: "center", padding: "64px 0",
           }}>
-            <div style={{ fontSize: 56 }}>🎉</div>
+            <div style={{ fontSize: 56 }} aria-hidden="true">🎉</div>
             <h2 style={{ fontFamily: F.sora, fontSize: 28, fontWeight: 800, color: C.dark }}>Você está na lista!</h2>
             <p style={{ fontFamily: F.inter, fontSize: 16, color: C.subtle, lineHeight: 1.7 }}>
               Obrigado por se cadastrar. Entraremos em contato assim que a plataforma for lançada com as
