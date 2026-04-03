@@ -170,12 +170,17 @@ body {
 }
 
 /* Form interactive elements */
-.form-tab-btn:hover {
-  background: #8B1E3F !important;
-  color: #F9F4E8 !important;
-}
+.form-role-card,
+.form-option-btn,
 .form-tag-btn {
   border-radius: 0;
+}
+.form-role-card:hover {
+  border-color: #8B1E3F !important;
+}
+.form-option-btn:hover {
+  border-color: #3FA796 !important;
+  background: rgba(63,167,150,0.05) !important;
 }
 .form-tag-btn:hover {
   border-color: #3FA796 !important;
@@ -183,6 +188,9 @@ body {
 }
 .form-submit-btn:hover:not(:disabled) {
   background: #6E1832 !important;
+}
+.form-back-btn:hover {
+  color: #1A1A1A !important;
 }
 
 /* Mobile: stack vertically */
