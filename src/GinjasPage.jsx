@@ -97,7 +97,7 @@ export default function GinjasPage() {
       )}
 
       {/* ── Hero — full viewport, content over fixed image ── */}
-      <section style={{ position: "relative", height: "100vh", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "10vh" }}>
+      <section className="hero-section" style={{ position: "relative", height: "100vh", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "10vh" }}>
 
         <div className="mobile-stack" style={{
           position: "relative", zIndex: 1,
@@ -120,6 +120,7 @@ export default function GinjasPage() {
             <button onClick={() => navigate("/pre-inscricao?role=volunteer")} style={{
               background: C.teal, color: C.whiteColor, fontFamily: F.dm,
               fontSize: 16, fontWeight: 700, padding: "18px 40px",
+              minHeight: 52,
               borderRadius: 0, border: "none", cursor: "pointer",
               boxShadow: "0 6px 24px rgba(63,167,150,0.35)",
               letterSpacing: "0.01em",
@@ -127,6 +128,7 @@ export default function GinjasPage() {
             <button onClick={() => navigate("/pre-inscricao?role=org")} style={{
               background: "transparent", color: C.burgundy, fontFamily: F.dm,
               fontSize: 16, fontWeight: 700, padding: "18px 40px",
+              minHeight: 52,
               borderRadius: 0, border: `2px solid ${C.burgundy}`, cursor: "pointer",
               letterSpacing: "0.01em",
             }}>Sou uma Associação</button>
@@ -244,6 +246,7 @@ export default function GinjasPage() {
               imageFit="cover"
               imageObjPosition="center center"
               imageScale={0.75}
+              hideImageMobile
             />
 
             {/* Tile 5 — row 3, right */}
@@ -269,7 +272,7 @@ export default function GinjasPage() {
 
 // ── Mosaic tile ────────────────────────────────────────────
 
-function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTitle, bgColor, decorImg, layout = "top-bottom", imagePadding = "16px", imageSize = "auto", fillImage = false, imageFit = "cover", imageObjPosition = "center center", imageScale = 1, bulletGap = 20, imageFlex = 1 }) {
+function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTitle, bgColor, decorImg, layout = "top-bottom", imagePadding = "16px", imageSize = "auto", fillImage = false, imageFit = "cover", imageObjPosition = "center center", imageScale = 1, bulletGap = 20, imageFlex = 1, hideImageMobile = false }) {
   const dark = !!bgColor;
   const textColor = dark ? C.dark : "#fff";
   const bodyColor = dark ? "rgba(26,26,26,0.8)" : "rgba(255,255,255,0.85)";
@@ -332,7 +335,7 @@ function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTi
   );
 
   const imagePane = (
-    <div style={{
+    <div className={hideImageMobile ? "mobile-hide" : undefined} style={{
       flex: imageFlex, minWidth: 0, minHeight: 0,
       position: "relative",
       display: "flex", alignItems: "center", justifyContent: "center",

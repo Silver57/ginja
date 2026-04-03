@@ -112,12 +112,18 @@ body {
     grid-template-rows: auto;
   }
   .mosaic-tile-tall,
+  .mosaic-tile-right-a,
+  .mosaic-tile-right-b,
   .mosaic-tile-right,
   .mosaic-tile-bottom-left,
   .mosaic-tile-bottom-right {
     grid-row: auto;
     grid-column: auto;
     min-height: 260px;
+  }
+  /* Stack side-layout tiles vertically on mobile */
+  .mosaic-grid > div {
+    flex-direction: column !important;
   }
   .mosaic-tile {
     min-height: 240px;
@@ -197,17 +203,43 @@ body {
 @media (max-width: 860px) {
   .form-page-split {
     flex-direction: column;
+    min-height: auto;
   }
   .form-page-hero {
     position: relative;
     top: auto;
     width: 100%;
     height: auto;
-    min-height: 280px;
+    min-height: 220px;
     align-items: flex-start;
   }
   .form-page-hero-content {
-    padding: clamp(32px, 6vw, 48px) clamp(20px, 4vw, 40px);
+    padding: clamp(28px, 6vw, 48px) clamp(20px, 4vw, 40px);
+  }
+  .form-page-form-panel {
+    min-height: auto;
+  }
+}
+
+/* ── Form page mobile adjustments ── */
+@media (max-width: 768px) {
+  .form-option-btn,
+  .form-role-card {
+    padding: 18px 20px !important;
+    min-height: 48px;
+  }
+  .form-tag-btn {
+    padding: 12px 18px !important;
+    min-height: 44px;
+  }
+}
+
+/* ── Hero mobile adjustments ── */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 4vh !important;
+    height: auto !important;
+    min-height: 85vh;
   }
 }
 

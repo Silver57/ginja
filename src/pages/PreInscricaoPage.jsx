@@ -434,7 +434,6 @@ export default function PreInscricaoPage() {
             display: "flex", flexDirection: "column",
             padding: "clamp(32px, 5vw, 56px) clamp(24px, 4vw, 56px)",
             maxWidth: 640, width: "100%",
-            minHeight: "calc(100vh - 64px)",
           }}>
             {/* Progress header */}
             <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 48 }}>

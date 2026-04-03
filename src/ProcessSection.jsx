@@ -243,6 +243,7 @@ export default function ProcessSection() {
             style={{
               position: "relative",
               padding: "12px 28px",
+              minHeight: 44,
               border: "none",
               cursor: "pointer",
               fontFamily: F.dm,
