@@ -1,39 +1,23 @@
-import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { C, F } from "./tokens";
 
-const C = {
-  teal: "#3FA796",
-  burgundy: "#8B1E3F",
-  orange: "#F4A623",
-  white: "#FFFFFF",
-  faint: "#999999",
-  footerBg: "#1F1F1F",
-  footerDivider: "#333333",
-};
-
-const F = {
-  sora: "'Sora', sans-serif",
-  inter: "'Inter', sans-serif",
-};
-
-const NAV_LINKS = [];
+const NAV_LINKS = [
+  { label: "Artigos", to: "/artigos" },
+];
 
 export default function Layout({ children, noBg }) {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  function handleParticipe() {
-    setMenuOpen(false);
-    if (location.pathname === "/") {
-      document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      navigate("/");
-      setTimeout(() => {
-        document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
+  // Close mobile menu on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleKey(e) {
+      if (e.key === "Escape") setMenuOpen(false);
     }
-  }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [menuOpen]);
 
   return (
     <>
@@ -73,7 +57,7 @@ export default function Layout({ children, noBg }) {
 
       <a href="#main-content" className="skip-link">Saltar para o conteúdo</a>
 
-      <div style={{ width: "100%", overflowX: "hidden", background: noBg ? "transparent" : "#F9F4E8" }}>
+      <div style={{ width: "100%", overflowX: "hidden", background: noBg ? "transparent" : C.cream }}>
         {/* ── Nav ── */}
         <nav
           aria-label="Navegação principal"
@@ -130,16 +114,6 @@ export default function Layout({ children, noBg }) {
               }} />
             </button>
 
-            <button
-              onClick={handleParticipe}
-              style={{
-                background: C.teal, color: C.white, fontFamily: F.inter,
-                fontSize: 14, fontWeight: 600, padding: "12px 20px",
-                minHeight: 44, borderRadius: 999, border: "none", cursor: "pointer",
-              }}
-            >
-              Participe
-            </button>
           </div>
         </nav>
 
@@ -156,11 +130,15 @@ export default function Layout({ children, noBg }) {
 
         {/* Mobile menu panel */}
         {menuOpen && (
-          <div style={{
-            position: "fixed", top: 60, left: 0, right: 0, zIndex: 100,
-            background: "#F9F4E8", borderBottom: "1px solid rgba(0,0,0,0.08)",
-            display: "flex", flexDirection: "column", padding: "8px 20px 20px",
-          }}>
+          <div
+            role="dialog"
+            aria-label="Menu de navegação"
+            style={{
+              position: "fixed", top: 60, left: 0, right: 0, zIndex: 100,
+              background: C.cream, borderBottom: "1px solid rgba(0,0,0,0.08)",
+              display: "flex", flexDirection: "column", padding: "8px 20px 20px",
+            }}
+          >
             {NAV_LINKS.map(({ label, to }) => (
               <Link
                 key={to}
@@ -185,45 +163,28 @@ export default function Layout({ children, noBg }) {
 
         {/* ── Footer ── */}
         <footer style={{ background: C.footerBg, padding: "var(--footer-padding)", width: "100%" }}>
-          <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-between", width: "100%", marginBottom: 32 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div aria-hidden="true" style={{ width: 28, height: 28, borderRadius: "50%", background: "#F7D6CF" }} />
-                <span style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.white }}>Ginjas</span>
-              </Link>
-              <p style={{ fontFamily: F.inter, fontSize: 14, color: C.faint, lineHeight: 1.5, maxWidth: 280 }}>
-                Conectando Habilidades Com Impacto Social
-              </p>
-            </div>
-
-            <div style={{ display: "flex", gap: 48 }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
+            <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div aria-hidden="true" style={{ width: 28, height: 28, borderRadius: "50%", background: "#F7D6CF" }} />
+              <span style={{ fontFamily: F.sora, fontSize: 22, fontWeight: 700, color: C.white }}>Ginjas</span>
+            </Link>
+            <p style={{ fontFamily: F.inter, fontSize: 14, color: C.footerMuted, lineHeight: 1.5, maxWidth: 280 }}>
+              Conectando Habilidades Com Impacto Social
+            </p>
           </div>
 
           <hr style={{ border: "none", borderTop: `1px solid ${C.footerDivider}`, margin: 0 }} />
 
           <div className="mobile-stack" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32 }}>
-            <span style={{ fontFamily: F.inter, fontSize: 12, color: "#666" }}>
+            <span style={{ fontFamily: F.inter, fontSize: 12, color: C.footerMuted }}>
               © 2026 Ginjas. Todos os direitos reservados.
             </span>
-            <span style={{ fontFamily: F.inter, fontSize: 12, color: "#666" }}>
+            <span style={{ fontFamily: F.inter, fontSize: 12, color: C.footerMuted }}>
               Feito com propósito.
             </span>
           </div>
         </footer>
       </div>
     </>
-  );
-}
-
-function FooterColumn({ title, links }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <span style={{ fontFamily: F.inter, fontSize: 13, fontWeight: 600, color: "#FFFFFF" }}>{title}</span>
-      {links.map(({ label, to }) => (
-        <Link key={label} to={to} style={{ fontFamily: F.inter, fontSize: 13, color: "#999999" }}>
-          {label}
-        </Link>
-      ))}
-    </div>
   );
 }

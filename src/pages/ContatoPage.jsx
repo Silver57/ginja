@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "../Layout";
-import { Field, labelStyle, inputStyle } from "../GinjasPage.jsx";
+import { Field, labelStyle, inputStyle } from "../FormHelpers.jsx";
 import { supabase } from "../lib/supabase.js";
 
 const C = { teal: "#3FA796", burgundy: "#8B1E3F", dark: "#1F1F1F", subtle: "#666", divider: "#EAEAEA", heroBg: "#F9F4E8" };

@@ -12,6 +12,7 @@ import ContatoPage from "./pages/ContatoPage";
 import VoluntarioPage from "./pages/VoluntarioPage";
 import ArtigosPage from "./pages/ArtigosPage";
 import SiteParaAssociacoesPage from "./pages/articles/SiteParaAssociacoesPage";
+import PreInscricaoPage from "./pages/PreInscricaoPage";
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("app")).render(
         <Route path="/contato" element={<ContatoPage />} />
         <Route path="/voluntario" element={<VoluntarioPage />} />
         <Route path="/participe" element={<VoluntarioPage />} />
+        <Route path="/pre-inscricao" element={<PreInscricaoPage />} />
         <Route path="/apoio" element={<ContatoPage />} />
         <Route path="/privacidade" element={<SobrePage />} />
         <Route path="/artigos" element={<ArtigosPage />} />
