@@ -3,33 +3,11 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import ProcessSection from "./ProcessSection";
+import { C, F } from "./tokens";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// ── Design tokens ─────────────────────────────────────────
-const C = {
-  teal: "#3FA796",
-  tealLight: "rgba(63,167,150,0.10)",
-  burgundy: "#8B1E3F",
-  dark: "#1A1A1A",
-  text: "#2D2D2D",
-  muted: "#555555",
-  subtle: "#6B6B6B",
-  white: "#F9F4E8",
-  divider: "#E8E8E8",
-  cardBg: "#FFFFFF",
-  whiteColor: "#FFFFFF",
-  orange: "#F4A623",
-
-};
-
-const F = {
-  sora: "'Sora', sans-serif",
-  inter: "'Inter', sans-serif",
-  dm: "'DM Sans', sans-serif",
-};
 
 
 export default function GinjasPage() {
@@ -113,12 +91,12 @@ export default function GinjasPage() {
             }}
           >
             <span style={{ fontSize: "clamp(28px, 4vw, 52px)" }}>Há quem saiba fazer.</span>
-            <span style={{ fontSize: "clamp(24px, 3.2vw, 44px)" }}>Há quem precise que aconteça.</span>
-            <span style={{ fontSize: "clamp(20px, 2.5vw, 36px)" }}>Ainda não se encontraram.</span>
+            <span style={{ fontSize: "clamp(28px, 4vw, 52px)" }}>Há quem precise que aconteça.</span>
+            <span style={{ fontSize: "clamp(22px, 2.8vw, 38px)", fontWeight: 600 }}>Ainda não se encontraram.</span>
           </h1>
           <div style={{ display: "flex", flexDirection: "row", gap: 16, flexShrink: 0, flexWrap: "wrap" }}>
             <button onClick={() => navigate("/pre-inscricao?role=volunteer")} style={{
-              background: C.teal, color: C.whiteColor, fontFamily: F.dm,
+              background: C.teal, color: C.dark, fontFamily: F.dm,
               fontSize: 16, fontWeight: 700, padding: "18px 40px",
               minHeight: 52,
               borderRadius: 0, border: "none", cursor: "pointer",
@@ -148,13 +126,13 @@ export default function GinjasPage() {
           color: C.burgundy, lineHeight: 1.35, margin: 0,
           maxWidth: 720,
         }}>
-          Passamos a explicar
+          Há profissionais com muito para dar e associações com muito por fazer.
         </p>
         <p style={{
-          fontFamily: F.dm, fontSize: "clamp(15px, 1.4vw, 18px)",
-          color: C.muted, lineHeight: 1.7, margin: 0, maxWidth: 600,
+          fontFamily: F.dm, fontSize: "clamp(16px, 1.5vw, 20px)",
+          color: C.text, lineHeight: 1.7, margin: 0, maxWidth: 600,
         }}>
-          Contabilistas, Advogados, Designers, Programadores… Todos têm uma capacidade especial para ajudar uma associação a crescer, mas aqueles que querem ajudar não sabem onde procurar.
+          O problema é que raramente se encontram. Nós tratamos disso. Encontramos a associação certa para o teu perfil e as tuas competências.
         </p>
       </section>
 
@@ -174,7 +152,7 @@ export default function GinjasPage() {
                   ["Gestão financeira", "É dificil gerir o financimento de uma associação sem ", {h:"conhecimento especializado"}],
                   ["Encontrar voluntários", "Saber onde encontrar voluntários com as competências certas é um desafio constante para as associações."],
               ]}
-              bulletGap={28}
+              bulletGap={18}
               bgColor="linear-gradient(158deg, #E4F6F3 0%, #9DD8D2 45%, #64B8B0 100%)"
             />
 
@@ -185,9 +163,9 @@ export default function GinjasPage() {
               img="/images/casa.svg"
               title="Voluntários"
               paras={[
-                ["Sabemos que a vida profissional nem sempre permite dedicar tempo a voluntariado, mas ", {h:"pequenas contribuições regulares"}," podem fazer uma grande diferença."],
+                ["Antes de avançares, é importante saberes: ", {h:"isto não é voluntariado ocasional."}, " Quando uma associação conta contigo, conta a sério. Pedimos-te compromisso com prazos, entregas e ", {h:"disponibilidade real."} ],
               ]}
-              bgColor="linear-gradient(122deg, #F9EEF3 0%, #E8B4CC 50%, #D48CAC 100%)"
+              bgColor="#F3E4EC"
               decorImg="/images/casa.svg"
               fillImage
               imageFit="contain"
@@ -202,7 +180,7 @@ export default function GinjasPage() {
               img="/images/borboletas.svg"
               title="Associações"
               paras={[
-                ["A missão da associação deve ser a sua maior preocupação. ", {h:"Gerir um site, campanhas ou contabilidade não deveria ser um obstáculo."}],
+                ["A missão da associação deve ser a sua maior preocupação. ", {h:"Gerir um site, campanhas ou contabilidade não deveria ser um obstáculo."}, " Nós encontramos quem vos ajude. A sério."],
               ]}
               bgColor="linear-gradient(148deg, #F8C84A 0%, #FBD987 50%, #FEF5E0 100%)"
               decorImg="/images/borboletas.svg"
@@ -220,9 +198,10 @@ export default function GinjasPage() {
               img="/images/generated_image3.svg"
               title="O que fazemos"
               paras={[
-                [{h:"Criamos a ponte entre associações e voluntários."}, " Uma plataforma onde associações podem encontrar voluntários com as competências de que precisam, e voluntários podem encontrar associações que precisam da sua ajuda. Disponiiblizamo também ferramentas para que o impacto seja máximo"],
+                [{h:"Depois do match, começa o trabalho."}, " Tu trazes o conhecimento técnico, a associação traz o contexto e a missão. Trabalham como parceiros. Não és um empregado nem a associação é tua cliente."],
+                ["Nós acompanhamos o processo do início ao fim, garantindo que a comunicação flui e que ", {h:"ambos os lados têm o que precisam para avançar."}],
               ]}
-              bgColor="linear-gradient(132deg, #C4698A 0%, #DC98B2 45%, #F4E0EA 100%)"
+              bgColor="linear-gradient(132deg, #E8A8BF 0%, #F0C4D5 45%, #F4E0EA 100%)"
               decorImg="/images/generated_image3.png"
               fillImage
               imageFit="cover"
@@ -236,10 +215,10 @@ export default function GinjasPage() {
               className="mosaic-tile-bottom-left"
               layout="side"
               img="/images/generated_image2.png"
-              title="A plataforma"
+              title="O impacto"
               paras={[
-                ["Não somos apenas uma plataforma de encontro entre voluntários e associações. Nosso objetivo é tornar o voluntariado mais eficaz e impactante, ajudando a conectar pessoas com as causas que mais importam para elas."],
-              ]}
+                ["Um site que finalmente funciona. Uma contabilidade organizada. Uma campanha que chegou a quem precisava. ", {h:"São estes os resultados quando alguém que sabe se junta a quem precisa."}],
+                ]}
               bgColor="linear-gradient(118deg, #EAF7F5 0%, #AEDBD7 50%, #74BDB8 100%)"
               decorImg="/images/generated_image2.png"
               fillImage
@@ -253,11 +232,11 @@ export default function GinjasPage() {
             <MosaicTile
               className="mosaic-tile-bottom-right"
               layout="side"
-              title="Artigos e recursos"
+              title="Junta-te a nós"
               paras={[
-                ["Temos também uma base de recursos por onde as associações podem logo começar a aprender e a melhorar. Desde criar um site a gerir as redes sociais, a nossa secção de artigos tem guias práticos e dicas para ajudar as associações a crescerem e terem mais impacto."],
+                [{h:"Coloca o que sabes ao serviço de quem precisa."}, " Temos também uma base de artigos e recursos práticos para ajudar associações a crescerem e terem mais impacto. Desde criar um site a gerir redes sociais."],
               ]}
-              bgColor="linear-gradient(142deg, #EE9660 0%, #F5BF90 45%, #FDEEDE 100%)"
+              bgColor="#F5D5B8"
             />
         </div>
       </section>
@@ -275,7 +254,7 @@ export default function GinjasPage() {
 function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTitle, bgColor, decorImg, layout = "top-bottom", imagePadding = "16px", imageSize = "auto", fillImage = false, imageFit = "cover", imageObjPosition = "center center", imageScale = 1, bulletGap = 20, imageFlex = 1, hideImageMobile = false }) {
   const dark = !!bgColor;
   const textColor = dark ? C.dark : "#fff";
-  const bodyColor = dark ? "rgba(26,26,26,0.8)" : "rgba(255,255,255,0.85)";
+  const bodyColor = dark ? "#3D3D3D" : "rgba(255,255,255,0.9)";
   const isSide = layout === "side" || layout === "side-reverse";
   const isReverse = layout === "side-reverse";
 
@@ -294,7 +273,7 @@ function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTi
       <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
         {paras.map((segments, i) => (
           <p key={i} style={{
-            fontFamily: F.dm, fontSize: dark ? "clamp(14px, 1.15vw, 17px)" : "clamp(13px, 1.05vw, 16px)",
+            fontFamily: F.dm, fontSize: dark ? "clamp(15px, 1.2vw, 18px)" : "clamp(14px, 1.1vw, 17px)",
             color: bodyColor, lineHeight: 1.65, margin: 0,
           }}>
             {segments.map((s, j) =>
@@ -306,7 +285,7 @@ function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTi
         ))}
         {bulletsTitle && (
           <p style={{
-            fontFamily: F.sora, fontSize: dark ? "clamp(14px, 1.1vw, 16px)" : "clamp(13px, 1.0vw, 15px)",
+            fontFamily: F.sora, fontSize: dark ? "clamp(15px, 1.15vw, 17px)" : "clamp(14px, 1.05vw, 16px)",
             fontWeight: 600, color: textColor, margin: "20px 0 0px",
           }}>
             {bulletsTitle}
@@ -316,7 +295,7 @@ function MosaicTile({ className, img, title, paras = [], bullets = [], bulletsTi
         {bullets.length > 0 && (
           <ul style={{
             margin: bulletsTitle ? "0" : "20px 0 0", paddingLeft: 0, listStylePosition: "inside", display: "flex", flexDirection: "column", gap: bulletGap,
-            fontFamily: F.dm, fontSize: dark ? "clamp(13px, 1.05vw, 16px)" : "clamp(12px, 1.0vw, 15px)",
+            fontFamily: F.dm, fontSize: dark ? "clamp(14px, 1.1vw, 17px)" : "clamp(13px, 1.05vw, 16px)",
             color: bodyColor, lineHeight: 1.5,
           }}>
             {bullets.map((b, i) => (

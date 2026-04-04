@@ -3,6 +3,7 @@
 
 export const C = {
   teal: "#3FA796",
+  tealDark: "#2D8A7C",
   tealLight: "rgba(63,167,150,0.10)",
   burgundy: "#8B1E3F",
   orange: "#F4A623",

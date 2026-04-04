@@ -8,7 +8,7 @@ const F = { sora: "'Sora', sans-serif", inter: "'Inter', sans-serif", dm: "'DM S
 
 const perks = [
   { emoji: "🎯", text: "Projetos com escopo claro e impacto mensurável" },
-  { emoji: "⏱", text: "Flexibilidade total — trabalhe no seu ritmo" },
+  { emoji: "⏱", text: "Flexibilidade total. Trabalhe no seu ritmo" },
   { emoji: "🌍", text: "Conecte-se com organizações do mundo todo" },
   { emoji: "📜", text: "Certificado de voluntariado ao concluir projetos" },
 ];

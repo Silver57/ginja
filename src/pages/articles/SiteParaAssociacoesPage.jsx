@@ -130,7 +130,7 @@ export default function SiteParaAssociacoesPage() {
             <Steps>
               <Step n={1}>
                 Vai a <Code>durable.com</Code> e clica em <strong>"Generate your website"</strong>. Descreve a tua
-                organização — por exemplo{" "}
+                organização, por exemplo{" "}
                 <em>
                   "associação cultural sem fins lucrativos para evitar a extinção das populações de abelhas na zona
                   das beiras"

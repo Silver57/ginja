@@ -38,7 +38,7 @@ export default function UnderConstruction({ title }) {
           fontFamily: F.dm, fontSize: 16, color: C.subtle,
           lineHeight: 1.7, maxWidth: 440,
         }}>
-          Esta página ainda não está pronta — mas o Ginjas está a crescer. Em breve terás mais para ler aqui.
+          Esta página ainda não está pronta, mas o Ginjas está a crescer. Em breve terás mais para ler aqui.
         </p>
 
         <div style={{

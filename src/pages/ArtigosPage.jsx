@@ -24,7 +24,7 @@ const articles = [
     slug: "site-para-associacoes",
     title: "Como criar um site para a tua associação (sem saber programar)",
     excerpt:
-      "Um guia directo ao assunto sobre ferramentas modernas, domínios, alojamento e SEO — escrito por quem já trotou por muitos prados digitais.",
+      "Um guia directo ao assunto sobre ferramentas modernas, domínios, alojamento e SEO. Escrito por quem já trotou por muitos prados digitais.",
     author: "Ginja",
     authorRole: "Cavalo de estimação dos Ginjas",
     date: "Março 2026",

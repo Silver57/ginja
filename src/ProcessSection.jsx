@@ -1,22 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-// ── Design tokens ────────────────────────────────────────────
-const C = {
-  teal: "#3FA796",
-  burgundy: "#8B1E3F",
-  dark: "#1A1A1A",
-  text: "#2D2D2D",
-  muted: "#3D3D3D",
-  white: "#F9F4E8",
-  orange: "#F4A623",
-  whiteColor: "#FFFFFF",
-};
-
-const F = {
-  sora: "'Sora', sans-serif",
-  dm: "'DM Sans', sans-serif",
-};
+import { C, F } from "./tokens";
 
 // ── Step data ────────────────────────────────────────────────
 const volunteerSteps = [
@@ -55,13 +39,13 @@ const associationSteps = [
     number: "01",
     title: "Regista a associação",
     summary: "Conta-nos sobre a vossa missão, desafios e as áreas onde mais precisam de apoio.",
-    detail: "O registo é simples e gratuito. Precisamos de conhecer a vossa associação — missão, dimensão, área de atuação — para podermos encontrar os voluntários certos. Quanto mais detalhe derem, melhores serão as sugestões.",
+    detail: "O registo é simples e gratuito. Precisamos de conhecer a vossa associação: missão, dimensão, área de atuação. Quanto mais detalhe derem, melhores serão as sugestões.",
     accent: C.burgundy,
   },
   {
     number: "02",
     title: "Define as necessidades",
-    summary: "Especifica as tarefas, projetos ou competências que procuram — desde design a contabilidade.",
+    summary: "Especifica as tarefas, projetos ou competências que procuram. Desde design a contabilidade.",
     detail: "Criem pedidos concretos: precisam de um site novo? De apoio jurídico pontual? De alguém que vos ajude a organizar a contabilidade? Cada pedido gera um projeto com descrição, prazo estimado e nível de envolvimento necessário.",
     accent: C.orange,
   },
